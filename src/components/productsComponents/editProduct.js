@@ -1,40 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStore } from "@/stores/autenticacion";
 
-const ProductModal = ({setIsEditModalOpen, formDataEdit}) => {
-  const [formData, setFormData] = useState({nombre:formDataEdit.nombre,precio:formDataEdit.precio, categoria:formDataEdit.categoria.nombre});
-  
-  const  user=useStore((state)=>state.user)
+const ProductModal = ({ setIsEditModalOpen, formDataEdit, onUpdateProduct }) => {
+  const [formData, setFormData] = useState({
+    nombre: "",
+    precio: "",
+    categoria: ""
+  });
+
+  const user = useStore((state) => state.user);
+
+  useEffect(() => {
+    if (formDataEdit) {
+      setFormData({
+        nombre: formDataEdit.nombre,
+        precio: formDataEdit.precio,
+        categoria: formDataEdit.categoria.nombre
+      });
+    }
+  }, [formDataEdit]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   try {
-    const datos = {nombre:formData.nombre,precio:Number(formData.precio ),categoria:formData.categoria}
-    console.log(datos)
-    const res= await fetch(`http://localhost:3010/producto/${formDataEdit.id}`,{
-      method:"PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${user.token}`,
-      },
-      body: JSON.stringify(datos),
-  })
-    const data=await res.json()
-    console.log(data)
-    setIsEditModalOpen(false)
-              
-   } catch (error) {
-    console.log(error)
-   }
-  };
+    try {
+      const datos = {
+        nombre: formData.nombre,
+        precio: Number(formData.precio),
+        categoria: formData.categoria
+      };
 
-  
+      const res = await fetch(`http://localhost:3010/producto/${formDataEdit.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        onUpdateProduct(data);
+      } else {
+        console.error("Error al actualizar el producto:", data.message);
+      }
+    } catch (error) {
+      console.error("Error al actualizar el producto:", error);
+    } finally {
+      setIsEditModalOpen(false); // Cierra el modal después de la actualización
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black">
@@ -77,9 +99,7 @@ const ProductModal = ({setIsEditModalOpen, formDataEdit}) => {
           <div className="flex justify-end mb-4">
             <button
               type="button"
-              onClick={
-                ()=>setIsEditModalOpen(false)
-              }
+              onClick={() => setIsEditModalOpen(false)}
               className="bg-gray-500 text-white py-1 px-3 rounded mr-2 hover:bg-gray-600"
             >
               Cancelar
@@ -87,16 +107,13 @@ const ProductModal = ({setIsEditModalOpen, formDataEdit}) => {
             <button
               type="submit"
               className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600"
-              
             >
               Guardar
             </button>
-            
           </div>
         </form>
       </div>
     </div>
   );
 };
-
 export default ProductModal;

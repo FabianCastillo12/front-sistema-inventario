@@ -32,8 +32,8 @@ export default function UpdateUserModal({ user, isOpen, onClose, onUpdateUser })
             <label className="block text-sm font-medium mb-2">Nombre</label>
             <input
               type="text"
-              name="name"
-              value={formData.nombre}
+              name="nombre"
+              value={formData.nombre} 
               onChange={handleChange}
               className="w-full border border-gray-300 rounded p-2"
               required

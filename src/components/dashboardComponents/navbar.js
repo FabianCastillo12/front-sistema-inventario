@@ -1,58 +1,48 @@
-// components/navbar.js
 "use client";
-import {
-  IoBag,
-  IoHome,
-  IoFileTrayStackedSharp,
-  IoPeopleSharp,
-} from "react-icons/io5";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { IoBag, IoHome, IoFileTrayStackedSharp, IoPeople } from "react-icons/io5";
 import "../../styles/navbar.css";
 import { useStore } from "@/stores/autenticacion";
+
 const Navbar = () => {
   const user = useStore((state) => state.user);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <nav className="navbar-container">
       <ul>
         <li>
-          <Link href="/dashboard/home" legacyBehavior>
-            <a>
-              <IoHome size={25} />
-              <i className="ai-home"></i>
-              <span>Home</span>
-            </a>
+          <Link href="/dashboard/home">
+            {isClient && <IoHome size={25} />}
+            <span>Home</span>
           </Link>
         </li>
 
-        {user.rol === "admin" && (
+        {isClient && user.rol === "admin" && (
           <li>
-            <Link href="/dashboard/user" legacyBehavior>
-              <a>
-                <IoPeopleSharp size={25} />
-                <i className="ai-person"></i>
-                <span>Usuarios</span>
-              </a>
+            <Link href="/dashboard/user">
+              <IoPeople size={25} />
+              <span>Usuarios</span>
             </Link>
           </li>
         )}
 
         <li>
-          <Link href="/dashboard/products" legacyBehavior>
-            <a>
-              <IoBag size={25} />
-              <i className="ai-home"></i>
-              <span>Productos</span>
-            </a>
+          <Link href="/dashboard/products">
+            {isClient && <IoBag size={25} />}
+            <span>Productos</span>
           </Link>
         </li>
         <li>
-          <Link href="/dashboard/stock" legacyBehavior>
-            <a>
-              <IoFileTrayStackedSharp size={25} />
-              <i className="ai-home"></i>
-              <span>Stock</span>
-            </a>
+          <Link href="/dashboard/stock">
+            {isClient && <IoFileTrayStackedSharp size={25} />}
+            <span>Stock</span>
           </Link>
         </li>
       </ul>

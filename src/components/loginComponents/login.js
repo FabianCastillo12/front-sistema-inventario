@@ -5,23 +5,19 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 const LoginForm = () => {
-  
   const { addUser } = useStore();
   const router = useRouter();
   const [email, setEmail] = useState("");
-  
+
   const [password, setPassword] = useState("");
 
- 
-  
- 
   useEffect(() => {
-    const item = localStorage.getItem('user-store');
+    const item = localStorage.getItem("user-store");
     if (item) {
       const parsedItem = JSON.parse(item);
-      
+
       if (parsedItem.state.user.token) {
-         addUser(parsedItem)
+        addUser(parsedItem);
         router.push("/dashboard");
       } else {
         router.push("/");
@@ -30,30 +26,32 @@ const LoginForm = () => {
       router.push("/");
     }
   }, []);
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    
-   
 
     const datos = {
       email,
       password,
     };
     try {
-      const res = await fetch("http://localhost:3010/auth/login", {  // Eliminar la petición
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify(datos),
+      const res = await fetch("http://localhost:3010/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datos),
       });
-     
-      const data=await res.json() 
-       // Eliminar la obtención de 'data'
-       if(data.token){
 
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error en la solicitud:", errorData);
+        throw new Error("Error en la solicitud");
+      }
+
+      const data = await res.json();
+
+      if (data.token) {
         await Swal.fire({
           position: "center",
           icon: "success",
@@ -61,22 +59,15 @@ const LoginForm = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-        router.push("/dashboard"); // Redirige al dashboard
-        addUser(data) 
-      localStorage.setItem("strinitem",JSON.gify(data))
-       }
-       else{
-        alert("credenciales incorrecto")
-       }
-       
-      
-       
-      
+        router.push("/dashboard");
+        addUser(data);
+        localStorage.setItem("strinitem", JSON.stringify(data));
+      } else {
+        alert("credenciales incorrecto");
+      }
     } catch (error) {
       console.log(error);
     }
-
-    
   };
 
   return (
@@ -85,7 +76,6 @@ const LoginForm = () => {
         <h2 className="text-center text-3xl font-bold text-gray-900 mb-4">
           Bienvenido
         </h2>
-
         <form
           onSubmit={handleSubmit}
           className="space-y-6 w-full flex-col py-2"
