@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useStore } from "@/stores/autenticacion";
 
-const ProductAddModal = ({ isOpen, onClose, onAddProduct, onUpdateProduct, onDeleteProduct, product }) => {
+const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
   const [formData, setFormData] = useState({
     nombre: '',
     precio: '',
@@ -69,36 +69,11 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, onUpdateProduct, onDel
       precio: parseFloat(formData.precio),
       cantidadStock: parseInt(formData.cantidadStock, 10),
     };
-
-    try {
-      const response = await fetch('http://localhost:3010/producto/crear', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(productData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error al agregar el producto:', errorData);
-      } else {
-        console.log('Producto agregado exitosamente');
-      }
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-    }
-
+    
+    onAddProduct(productData)
     onClose();
   };
 
-  const handleDelete = () => {
-    if (product) {
-      onDeleteProduct(product.id);
-    }
-    onClose();
-  };
 
   if (!isOpen) return null;
 
@@ -172,17 +147,8 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, onUpdateProduct, onDel
               type="submit"
               className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600"
             >
-              {product ? "Guardar Cambios" : "Agregar Producto"}
+              Agregar Producto
             </button>
-            {user.rol === "admin" && product && (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="bg-red-500 text-white py-1 px-3 rounded ml-2 hover:bg-red-600"
-              >
-                Eliminar
-              </button>
-            )}
           </div>
         </form>
       </div>

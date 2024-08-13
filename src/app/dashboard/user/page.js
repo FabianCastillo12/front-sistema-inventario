@@ -16,11 +16,11 @@ export default function UserPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-
   useEffect(() => {
     setIsMounted(true);
     traerUsuarios();
   }, []);
+
   const traerUsuarios = async () => {
     try {
       const res = await fetch("http://localhost:3010/auth/", {
@@ -41,7 +41,7 @@ export default function UserPage() {
 
   const handleUpdateUser = async (updatedUser) => {
     const { id, ...userData } = updatedUser;
-  
+
     try {
       const res = await fetch(`http://localhost:3010/auth/${id}`, {
         method: "PATCH",
@@ -51,10 +51,10 @@ export default function UserPage() {
         },
         body: JSON.stringify(userData),
       });
-  
+
       if (res.ok) {
         await traerUsuarios();
-  
+
         await Swal.fire({
           position: "center",
           icon: "success",
@@ -62,7 +62,7 @@ export default function UserPage() {
           showConfirmButton: false,
           timer: 1500,
         });
-  
+
         setIsEditModalOpen(false);
       } else {
         const errorData = await res.json();
@@ -81,20 +81,20 @@ export default function UserPage() {
 
   const handleDeleteUser = async (userId) => {
     const userToDelete = users.find((user) => user.id === userId);
-    
+
     if (!userToDelete) return;
-  
+
     const result = await Swal.fire({
-      title: '¿Estás seguro?',
+      title: "¿Estás seguro?",
       text: `Se eliminará el usuario ${userToDelete.name}. Esta acción no se puede deshacer.`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
     });
-  
+
     if (result.isConfirmed) {
       try {
         const res = await fetch(`http://localhost:3010/auth/${userId}`, {
@@ -103,7 +103,7 @@ export default function UserPage() {
             Authorization: `Bearer ${user.token}`,
           },
         });
-  
+
         if (res.ok) {
           setUsers(users.filter((user) => user.id !== userId));
           await Swal.fire({
@@ -159,7 +159,7 @@ export default function UserPage() {
   if (!isMounted) {
     return null;
   }
-  
+
   return (
     <>
       <div className="user-container">

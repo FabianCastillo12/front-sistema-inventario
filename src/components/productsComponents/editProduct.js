@@ -4,22 +4,25 @@ import { useStore } from "@/stores/autenticacion";
 const ProductModal = ({ setIsEditModalOpen, formDataEdit, onUpdateProduct }) => {
   const [formData, setFormData] = useState({
     nombre: "",
-    precio: "",
+    precio: 0,
     categoria: ""
   });
-
+  
   const user = useStore((state) => state.user);
 
   useEffect(() => {
     if (formDataEdit) {
       setFormData({
+        id:formDataEdit.id,
         nombre: formDataEdit.nombre,
         precio: formDataEdit.precio,
-        categoria: formDataEdit.categoria.nombre
+        categoria: formDataEdit.categoria.nombre,
+        unidad_medida: formDataEdit.unidad_medida,
+        estado: formDataEdit.estado
       });
     }
   }, [formDataEdit]);
-
+  console.log(formDataEdit)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -27,35 +30,17 @@ const ProductModal = ({ setIsEditModalOpen, formDataEdit, onUpdateProduct }) => 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const datos = {
-        nombre: formData.nombre,
-        precio: Number(formData.precio),
-        categoria: formData.categoria
-      };
-
-      const res = await fetch(`http://localhost:3010/producto/${formDataEdit.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`
-        },
-        body: JSON.stringify(datos)
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        onUpdateProduct(data);
-      } else {
-        console.error("Error al actualizar el producto:", data.message);
-      }
-    } catch (error) {
-      console.error("Error al actualizar el producto:", error);
-    } finally {
-      setIsEditModalOpen(false); // Cierra el modal después de la actualización
-    }
+    const datos = {
+      nombre: formData.nombre,
+      precio: parseFloat(formData.precio),
+      categoria: formData.categoria,
+      unidad_medida: formData.unidad_medida,
+      estado: formData.estado
+    };
+    onUpdateProduct(datos);     
+    console.log(datos)  
+    setIsEditModalOpen(false); 
+    
   };
 
   return (

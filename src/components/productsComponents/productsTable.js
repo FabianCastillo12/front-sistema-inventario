@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProductModal from "@/components/productsComponents/editProduct";
 import { useStore } from "@/stores/autenticacion";
 
-const ProductTable = ({ products, onDeleteProduct }) => {
+const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [formDataEdit, setFormDataEdit] = useState(null);
   const [productList, setProductList] = useState(products);
@@ -17,14 +17,7 @@ const ProductTable = ({ products, onDeleteProduct }) => {
     setFormDataEdit(product);
   };
 
-  const handleUpdateProduct = (updatedProduct) => {
-    // Actualiza la lista de productos
-    setProductList((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      )
-    );
-  };
+  
 
   return (
     <div>
@@ -70,10 +63,7 @@ const ProductTable = ({ products, onDeleteProduct }) => {
         <ProductModal
           setIsEditModalOpen={setIsEditModalOpen}
           formDataEdit={formDataEdit}
-          onUpdateProduct={(updatedProduct) => {
-            handleUpdateProduct(updatedProduct);
-            setIsEditModalOpen(false);
-          }}
+          onUpdateProduct={onUpdateProduct}
         />
       )}
     </div>

@@ -13,7 +13,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     traerProducto();
-  }, []);
+  },[] );
 
   const traerProducto = async () => {
     try {
@@ -48,7 +48,7 @@ export default function ProductsPage() {
       const data = await res.json();
   
       if (res.ok) {
-        setProducts((prevProducts) => [...prevProducts, data]);
+        await traerProducto();
         setIsAddModalOpen(false);
       } else {
         console.error("Error al agregar el producto:", data.message);
@@ -70,6 +70,7 @@ export default function ProductsPage() {
       });
 
       const data = await res.json();
+      console.log(updatedProduct);
 
       if (res.ok) {
         // Actualiza el estado con los datos actualizados
@@ -78,9 +79,11 @@ export default function ProductsPage() {
             product.id === updatedProduct.id ? data : product
           )
         );
+        console.log("producto actualizado")
         setIsAddModalOpen(false);
       } else {
         console.error("Error al actualizar el producto:", data.message);
+        console.log(updatedProduct)
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
@@ -131,12 +134,12 @@ export default function ProductsPage() {
           products={products}
           onEditProduct={handleEditProduct}
           onDeleteProduct={handleDeleteProduct}
+          onUpdateProduct={handleUpdateProduct}
         />
         <ProductAddModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onAddProduct={handleAddProduct}
-          onUpdateProduct={handleUpdateProduct}
           onDeleteProduct={handleDeleteProduct}
           product={editingProduct}
         />
