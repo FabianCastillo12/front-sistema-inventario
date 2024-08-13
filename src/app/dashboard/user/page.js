@@ -41,7 +41,6 @@ export default function UserPage() {
 
   const handleUpdateUser = async (updatedUser) => {
     const { id, ...userData } = updatedUser;
-
     try {
       const res = await fetch(`http://localhost:3010/auth/${id}`, {
         method: "PATCH",
@@ -143,7 +142,6 @@ export default function UserPage() {
 
     if (data) {
       setUsers((prevUsers) => [...prevUsers, data]);
-
       await Swal.fire({
         position: "center",
         icon: "success",
@@ -151,7 +149,6 @@ export default function UserPage() {
         showConfirmButton: false,
         timer: 1500,
       });
-
       setIsAddModalOpen(false);
     }
   };

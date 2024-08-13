@@ -3,45 +3,25 @@ import { useStore } from "@/stores/autenticacion";
 
 const ProductModal = ({ setIsEditModalOpen, formDataEdit, onUpdateProduct }) => {
   const [formData, setFormData] = useState({
-    nombre: "",
-    precio: 0,
-    categoria: ""
+    id: formDataEdit.id,
+    nombre:formDataEdit.nombre,
+    precio:formDataEdit.precio, 
+    categoria:formDataEdit.categoria.nombre
   });
   
-  const user = useStore((state) => state.user);
-
-  useEffect(() => {
-    if (formDataEdit) {
-      setFormData({
-        id:formDataEdit.id,
-        nombre: formDataEdit.nombre,
-        precio: formDataEdit.precio,
-        categoria: formDataEdit.categoria.nombre,
-        unidad_medida: formDataEdit.unidad_medida,
-        estado: formDataEdit.estado
-      });
-    }
-  }, [formDataEdit]);
-  console.log(formDataEdit)
+  const  user=useStore((state)=>state.user)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const datos = {
-      nombre: formData.nombre,
-      precio: parseFloat(formData.precio),
-      categoria: formData.categoria,
-      unidad_medida: formData.unidad_medida,
-      estado: formData.estado
-    };
-    onUpdateProduct(datos);     
-    console.log(datos)  
-    setIsEditModalOpen(false); 
-    
+    onUpdateProduct(formData);
+    setIsEditModalOpen(false)
   };
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black">
