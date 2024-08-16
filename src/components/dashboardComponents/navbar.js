@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { IoBag, IoHome, IoFileTrayStackedSharp, IoPeople } from "react-icons/io5";
+import { IoBag, IoHome, IoFileTrayStackedSharp, IoPeople, IoChevronForwardSharp, IoChevronBackOutline } from "react-icons/io5";
 import "../../styles/navbar.css";
 import { useStore } from "@/stores/autenticacion";
 
-const Navbar = () => {
+const Navbar = ({setAbrirNavbar,abrirNavbar}) => {
   const user = useStore((state) => state.user);
   const [isClient, setIsClient] = useState(false);
 
@@ -15,10 +15,10 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="navbar-container">
+    <nav className="navbar-container" >
       <ul>
         <li>
-          <Link href="/dashboard/home">
+          <Link href="/dashboard/home" >
             {isClient && <IoHome size={25} />}
             <span>Home</span>
           </Link>
@@ -46,6 +46,14 @@ const Navbar = () => {
           </Link>
         </li>
       </ul>
+      {
+      abrirNavbar&&(
+        <div onClick={()=>setAbrirNavbar(false)} className=" block bg-white p-2 rounded-full absolute  bottom-10 -right-4 shadow-md lg:hidden">
+        <IoChevronBackOutline  size={20} />
+       </div>
+      )
+      }
+     
     </nav>
   );
 };

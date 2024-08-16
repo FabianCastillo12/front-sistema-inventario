@@ -6,16 +6,18 @@
   box-sizing: border-box;
 }
 
-nav.navbar-container {
-  height: 100%;
-  width: 100%;
-  background-color: #171821; 
+.navbar-container {
+  /* position: fixed;
+  top: 0;
+  left: 0; */
+   
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  
 }
 
 .navbar-container ul {
@@ -50,7 +52,9 @@ nav.navbar-container {
 }
 
 .navbar-container a:hover span,
-.navbar-container a:focus span {
+.navbar-container a:focus span 
+
+{
   transform: scale(1);
   opacity: 1;
 }

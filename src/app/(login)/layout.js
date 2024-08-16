@@ -1,10 +1,10 @@
 
 export default function Login_Layout({ children }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex justify-center items-center p-24 bg-white">
+  
+      <div className="min-h-screen w-full flex justify-center items-center p-24 fondo">
         {children}
-      </body>
-    </html>
+      </div>
+   
   );
 }
