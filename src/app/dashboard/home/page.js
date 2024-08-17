@@ -24,7 +24,6 @@ export default function DashboardPage() {
       </div>
       <div className="  bg-[#21222D]  p-5  col-span-12 lg:col-span-8  xl:col-span-6 2xl:col-span-4">
         <h4 className=" text-3xl font-semibold text-white mb-6">Reportes</h4>
-
         <LineChartHero />
       </div>
 

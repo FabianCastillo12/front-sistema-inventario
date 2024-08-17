@@ -17,8 +17,6 @@ const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
     setFormDataEdit(product);
   };
 
-
-
   return (
     <div>
       <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -71,4 +69,3 @@ const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
 };
 
 export default ProductTable;
-

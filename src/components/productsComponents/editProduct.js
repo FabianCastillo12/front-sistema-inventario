@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useStore } from "@/stores/autenticacion";
+import React, { useState } from "react";
 
 const ProductModal = ({
   setIsEditModalOpen,
@@ -11,9 +10,9 @@ const ProductModal = ({
     nombre: formDataEdit.nombre,
     precio: formDataEdit.precio,
     categoria: formDataEdit.categoria.nombre,
+    cantidadStock: formDataEdit.catidadStock,
   });
 
-  const user = useStore((state) => state.user);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });

@@ -1,90 +1,100 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import StockList from "@/components/stockComponents/stockList";
 import UpdateStockModal from "@/components/stockComponents/updateStock";
 import { useStore } from "@/stores/autenticacion";
 import Swal from "sweetalert2";
 
 export default function StockPage() {
-  const [stock, setStock] = useState("");
+  const [stock, setStock] = useState([]);
   const user = useStore((state) => state.user);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+
   useEffect(() => {
-    traerProducto();
+    fetchStock();
   }, []);
-  const traerProducto = async () => {
+
+  const fetchStock = async () => {
+    console.log("Fetching stock...");
     try {
       const res = await fetch("http://localhost:3010/producto/", {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
+
+      if (!res.ok) {
+        console.error("Error fetching stock:", res.statusText);
+        return;
+      }
+
       const data = await res.json();
       setStock(data);
-      console.log(data);
+      console.log("Stock fetched:", data);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching stock:", error);
     }
   };
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState(null);
 
-  // Maneja la actualización del stock
-  const handleUpdateStock = async (formData) => {
+  const handleUpdateStock = async (productId, newStock) => {
+    console.log("Handling stock update for product ID:", productId, "New stock:", newStock);
     try {
-      const datos = {
-        nombre: formData.nombre,
-        precio: Number(formData.precio),
-        categoria: formData.categoria,
-      };
-      console.log(datos);
-      const res = await fetch(`http://localhost:3010/producto/${formData.id}`, {
+      const res = await fetch(`http://localhost:3010/producto/${productId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
-        body: JSON.stringify(datos),
+        body: JSON.stringify({ cantidadStock: newStock }), // Asegúrate de que el campo coincida con el backend
       });
-      const data = await res.json();
-      console.log(data);
 
       if (res.ok) {
-        await traerProducto();
+        console.log("Stock update successful");
+        await fetchStock();
         await Swal.fire({
           position: "center",
           icon: "success",
-          title: "Producto actualizado",
+          title: "Stock actualizado",
           showConfirmButton: false,
           timer: 1500,
         });
       } else {
-        console.error("Error al modificar el producto:", data.message);
+        const data = await res.json();
+        console.error("Error updating stock:", data.message);
         await Swal.fire({
           position: "center",
           icon: "error",
-          title: "Error al actualizar el producto",
+          title: `Error: ${data.message}`,
           showConfirmButton: true,
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error updating stock:", error);
     }
   };
 
-  const openUpdateModal = (item) => {
-    setCurrentItem(item);
+  const openUpdateModal = (product) => {
+    console.log("Opening update modal for product:", product);
+    setCurrentProduct(product);
     setIsUpdateModalOpen(true);
   };
 
+  const closeUpdateModal = () => {
+    console.log("Closing update modal");
+    setIsUpdateModalOpen(false);
+    setCurrentProduct(null);
+  };
+
   return (
-    <div className="stock-container p-6  bg-white rounded-md shadow-md">
+    <div className="stock-container p-6 bg-white rounded-md shadow-md">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">Stock</h1>
       <StockList stock={stock} onEdit={openUpdateModal} />
-      {isUpdateModalOpen && currentItem && (
+      {isUpdateModalOpen && currentProduct && (
         <UpdateStockModal
           isOpen={isUpdateModalOpen}
-          onClose={() => setIsUpdateModalOpen(false)}
-          stockItem={currentItem}
+          onClose={closeUpdateModal}
+          product={currentProduct}
           onUpdateStock={handleUpdateStock}
         />
       )}

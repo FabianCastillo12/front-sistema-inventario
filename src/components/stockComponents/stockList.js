@@ -36,7 +36,7 @@ const StockList = ({ stock, onEdit }) => {
                 {item.nombre}
               </td>
               <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                {item.catidadStock}
+                {item.cantidadStock}
               </td>
               <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                 {" "}
