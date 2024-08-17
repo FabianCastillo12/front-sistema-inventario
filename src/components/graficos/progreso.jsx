@@ -1,4 +1,4 @@
-import { Card, ProgressCircle } from '@tremor/react';
+import { Card, ProgressCircle } from "@tremor/react";
 
 export function ProgressCircleUsageExample() {
   return (

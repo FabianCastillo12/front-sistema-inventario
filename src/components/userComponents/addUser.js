@@ -1,20 +1,20 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
   const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    password:"",
-    confir_password:"",
-    role: 'user', // Valor predeterminado
+    nombre: "",
+    email: "",
+    password: "",
+    confir_password: "",
+    role: "user", // Valor predeterminado
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
- console.log(formData)
+  console.log(formData);
   const handleSubmit = (e) => {
     e.preventDefault();
 

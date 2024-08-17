@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-export default function UpdateUserModal({ user, isOpen, onClose, onUpdateUser }) {
+export default function UpdateUserModal({
+  user,
+  isOpen,
+  onClose,
+  onUpdateUser,
+}) {
   const [formData, setFormData] = useState({ ...user });
 
   useEffect(() => {
@@ -11,7 +16,7 @@ export default function UpdateUserModal({ user, isOpen, onClose, onUpdateUser })
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -33,7 +38,7 @@ export default function UpdateUserModal({ user, isOpen, onClose, onUpdateUser })
             <input
               type="text"
               name="nombre"
-              value={formData.nombre} 
+              value={formData.nombre}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded p-2"
               required

@@ -20,7 +20,7 @@ const Dashboard = () => {
         </div>
       </div>
       <BarChartExampleWithGroups />
-      <LineChartUsageExample/>
+      <LineChartUsageExample />
     </div>
   );
 };

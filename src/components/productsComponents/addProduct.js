@@ -4,11 +4,11 @@ import { useStore } from "@/stores/autenticacion";
 
 const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
   const [formData, setFormData] = useState({
-    nombre: '',
-    precio: '',
-    cantidadStock: '',
-    unidad_medida: '',
-    estado: ''
+    nombre: "",
+    precio: "",
+    cantidadStock: "",
+    unidad_medida: "",
+    estado: "",
   });
   const [categorias, setCategorias] = useState([]);
   const user = useStore((state) => state.user);
@@ -19,8 +19,8 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
       try {
         const res = await fetch("http://localhost:3010/categoria", {
           headers: {
-            'Authorization': `Bearer ${user.token}`,
-          }
+            Authorization: `Bearer ${user.token}`,
+          },
         });
         const data = await res.json();
         setCategorias(data);
@@ -36,19 +36,19 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
   useEffect(() => {
     if (product) {
       setFormData({
-        nombre: product.nombre || '',
-        precio: product.precio || '',
-        cantidadStock: product.cantidadStock || '',
-        unidad_medida: product.unidad_medida || '',
-        estado: product.estado || ''
+        nombre: product.nombre || "",
+        precio: product.precio || "",
+        cantidadStock: product.cantidadStock || "",
+        unidad_medida: product.unidad_medida || "",
+        estado: product.estado || "",
       });
     } else {
       setFormData({
-        nombre: '',
-        precio: '',
-        cantidadStock: '',
-        unidad_medida: '',
-        estado: ''
+        nombre: "",
+        precio: "",
+        cantidadStock: "",
+        unidad_medida: "",
+        estado: "",
       });
     }
   }, [product]);
@@ -57,23 +57,22 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === 'precio' || name === 'cantidadStock' ? value : value
+      [name]: name === "precio" || name === "cantidadStock" ? value : value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const productData = {
       ...formData,
       precio: parseFloat(formData.precio),
       cantidadStock: parseInt(formData.cantidadStock, 10),
     };
-    
-    onAddProduct(productData)
+
+    onAddProduct(productData);
     onClose();
   };
-
 
   if (!isOpen) return null;
 
@@ -100,7 +99,7 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
               type="number"
               step="0.01"
               name="precio"
-              value={formData.precio || ''}
+              value={formData.precio || ""}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             />
@@ -110,7 +109,7 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
             <input
               type="number"
               name="cantidadStock"
-              value={formData.cantidadStock || ''}
+              value={formData.cantidadStock || ""}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             />

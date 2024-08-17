@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useStore } from "@/stores/autenticacion";
 
-const ProductModal = ({ setIsEditModalOpen, formDataEdit, onUpdateProduct }) => {
+const ProductModal = ({
+  setIsEditModalOpen,
+  formDataEdit,
+  onUpdateProduct,
+}) => {
   const [formData, setFormData] = useState({
     id: formDataEdit.id,
-    nombre:formDataEdit.nombre,
-    precio:formDataEdit.precio, 
-    categoria:formDataEdit.categoria.nombre
+    nombre: formDataEdit.nombre,
+    precio: formDataEdit.precio,
+    categoria: formDataEdit.categoria.nombre,
   });
-  
-  const  user=useStore((state)=>state.user)
+
+  const user = useStore((state) => state.user);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     onUpdateProduct(formData);
-    setIsEditModalOpen(false)
+    setIsEditModalOpen(false);
   };
-
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black">

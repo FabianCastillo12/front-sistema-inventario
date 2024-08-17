@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const UpdateStockModal = ({ isOpen, onClose, stockItem, onUpdateStock }) => {
   const [formData, setFormData] = useState({
-    id: '',
-    nombre: '',
-    precio: '',
-    categoria: '',
-    catidadStock: ''
+    id: "",
+    nombre: "",
+    precio: "",
+    categoria: "",
+    catidadStock: "",
   });
 
-  // Actualiza formData cuando stockItem cambia
   useEffect(() => {
     if (stockItem) {
       setFormData({
         id: stockItem.id,
         nombre: stockItem.nombre,
-        precio: stockItem.precio, 
+        precio: stockItem.precio,
         categoria: String(stockItem.categoria.nombre),
-        catidadStock: stockItem.catidadStock
+        catidadStock: stockItem.catidadStock,
       });
     }
   }, [stockItem]);
@@ -26,7 +25,7 @@ const UpdateStockModal = ({ isOpen, onClose, stockItem, onUpdateStock }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 

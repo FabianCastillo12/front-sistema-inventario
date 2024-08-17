@@ -1,48 +1,52 @@
 "use client";
-import { useEffect, useState } from 'react';
-import StockList from '@/components/stockComponents/stockList';
-import UpdateStockModal from '@/components/stockComponents/updateStock';
-import { useStore } from '@/stores/autenticacion';
+import { useEffect, useState } from "react";
+import StockList from "@/components/stockComponents/stockList";
+import UpdateStockModal from "@/components/stockComponents/updateStock";
+import { useStore } from "@/stores/autenticacion";
 import Swal from "sweetalert2";
 
 export default function StockPage() {
   const [stock, setStock] = useState("");
-  const  user=useStore((state)=>state.user)
-  useEffect(()=>{
-     traerProducto()
-  },[])
- const traerProducto=async()=>{
-  try {
-    const res = await fetch("http://localhost:3010/producto/", {
-      headers: {
-          'Authorization': `Bearer ${user.token}`,
-      }
-  });
-  const data=await res.json()
-  setStock(data)
-  console.log(data)
-  } catch (error) {
-    console.log(error)
-  }
- }
+  const user = useStore((state) => state.user);
+  useEffect(() => {
+    traerProducto();
+  }, []);
+  const traerProducto = async () => {
+    try {
+      const res = await fetch("http://localhost:3010/producto/", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      const data = await res.json();
+      setStock(data);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
 
   // Maneja la actualización del stock
   const handleUpdateStock = async (formData) => {
     try {
-      const datos = { nombre: formData.nombre, precio: Number(formData.precio), categoria: formData.categoria }
-      console.log(datos)
+      const datos = {
+        nombre: formData.nombre,
+        precio: Number(formData.precio),
+        categoria: formData.categoria,
+      };
+      console.log(datos);
       const res = await fetch(`http://localhost:3010/producto/${formData.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(datos),
-      })
-      const data = await res.json()
-      console.log(data)
+      });
+      const data = await res.json();
+      console.log(data);
 
       if (res.ok) {
         await traerProducto();
@@ -62,10 +66,9 @@ export default function StockPage() {
           showConfirmButton: true,
         });
       }
-      
     } catch (error) {
-      console.log(error)
-    } 
+      console.log(error);
+    }
   };
 
   const openUpdateModal = (item) => {

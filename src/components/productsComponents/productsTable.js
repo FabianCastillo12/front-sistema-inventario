@@ -17,7 +17,7 @@ const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
     setFormDataEdit(product);
   };
 
-  
+
 
   return (
     <div>

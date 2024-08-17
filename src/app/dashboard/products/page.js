@@ -43,7 +43,7 @@ export default function ProductsPage() {
           precio: newProduct.precio,
           cantidadStock: newProduct.cantidadStock,
           unidad_medida: newProduct.unidad_medida,
-          estado: newProduct.estado
+          estado: newProduct.estado,
         }),
       });
       const data = await res.json();
@@ -68,18 +68,22 @@ export default function ProductsPage() {
 
   const handleUpdateProduct = async (formData) => {
     try {
-      const datos = { nombre: formData.nombre, precio: Number(formData.precio), categoria: formData.categoria }
-      console.log(datos)
+      const datos = {
+        nombre: formData.nombre,
+        precio: Number(formData.precio),
+        categoria: formData.categoria,
+      };
+      console.log(datos);
       const res = await fetch(`http://localhost:3010/producto/${formData.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(datos),
-      })
-      const data = await res.json()
-      console.log(data)
+      });
+      const data = await res.json();
+      console.log(data);
 
       if (res.ok) {
         await traerProducto();
@@ -99,10 +103,9 @@ export default function ProductsPage() {
           showConfirmButton: true,
         });
       }
-      
     } catch (error) {
-      console.log(error)
-    } 
+      console.log(error);
+    }
   };
 
   const handleEditProduct = (product) => {
@@ -111,7 +114,9 @@ export default function ProductsPage() {
   };
 
   const handleDeleteProduct = async (productId) => {
-    const prodcutToDelete = products.find((product) => product.id === productId);
+    const prodcutToDelete = products.find(
+      (product) => product.id === productId
+    );
     const result = await Swal.fire({
       title: "¿Estás seguro?",
       text: `Se eliminará el producto ${prodcutToDelete.name}. Esta acción no se puede deshacer.`,
@@ -130,7 +135,7 @@ export default function ProductsPage() {
             Authorization: `Bearer ${user.token}`,
           },
         });
-  
+
         if (res.ok) {
           setProducts((prevProducts) =>
             prevProducts.filter((product) => product.id !== productId)
@@ -143,7 +148,6 @@ export default function ProductsPage() {
         console.error("Error en la solicitud:", error);
       }
     }
-    
   };
 
   return (

@@ -1,23 +1,17 @@
-/* navbar.css */
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
-*, *:after, *:before {
+*,
+*:after,
+*:before {
   box-sizing: border-box;
 }
 
 .navbar-container {
-  /* position: fixed;
-  top: 0;
-  left: 0; */
-   
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  
 }
 
 .navbar-container ul {
@@ -34,7 +28,7 @@
 }
 
 .navbar-container a {
-  color: #FFF;
+  color: #fff;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -52,9 +46,7 @@
 }
 
 .navbar-container a:hover span,
-.navbar-container a:focus span 
-
-{
+.navbar-container a:focus span {
   transform: scale(1);
   opacity: 1;
 }
@@ -145,7 +137,7 @@ details div pre {
 
 details[open] div {
   -webkit-animation: scale 0.25s ease;
-          animation: scale 0.25s ease;
+  animation: scale 0.25s ease;
 }
 
 summary {

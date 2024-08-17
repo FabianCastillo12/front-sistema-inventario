@@ -42,7 +42,7 @@ export function BarChartExampleWithGroups() {
         Venta Gaseosas: Semana
       </h3>
       <BarChart
-        className="mt-6 h-80" 
+        className="mt-6 h-80"
         data={chartdata}
         index="name"
         categories={[

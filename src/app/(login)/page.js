@@ -1,11 +1,11 @@
 import LoginForm from "@/components/loginComponents/login.js";
 
-function Login () {
+function Login() {
   return (
     <div className="w-full flex justify-center ">
-        <LoginForm/>
+      <LoginForm />
     </div>
-  )
+  );
 }
 
 export default Login;
