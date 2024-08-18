@@ -40,6 +40,13 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
           </li>
         )}
 
+        {/* Nuevo enlace a Clientes */}
+        <li>
+          <Link href="/dashboard/clientes">
+            {isClient && <IoPeople size={25} />} <span>Clientes</span>
+          </Link>
+        </li>
+
         <li>
           <Link href="/dashboard/products">
             {isClient && <IoBag size={25} />}
