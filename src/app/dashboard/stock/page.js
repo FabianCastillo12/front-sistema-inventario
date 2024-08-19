@@ -30,15 +30,22 @@ export default function StockPage() {
       }
 
       const data = await res.json();
-      setStock(data);
-      console.log("Stock fetched:", data);
+      // Ordenar los productos por ID
+      const sortedData = data.sort((a, b) => a.id - b.id);
+      setStock(sortedData);
+      console.log("Stock fetched and sorted:", sortedData);
     } catch (error) {
       console.error("Error fetching stock:", error);
     }
   };
 
   const handleUpdateStock = async (productId, newStock) => {
-    console.log("Handling stock update for product ID:", productId, "New stock:", newStock);
+    console.log(
+      "Handling stock update for product ID:",
+      productId,
+      "New stock:",
+      newStock
+    );
     try {
       const res = await fetch(`http://localhost:3010/producto/${productId}`, {
         method: "PATCH",
@@ -46,12 +53,19 @@ export default function StockPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
-        body: JSON.stringify({ cantidadStock: newStock }), // Asegúrate de que el campo coincida con el backend
+        body: JSON.stringify({ cantidadStock: newStock }),
       });
 
       if (res.ok) {
         console.log("Stock update successful");
-        await fetchStock();
+        // Actualiza solo el producto en el estado
+        setStock((prevStock) =>
+          prevStock.map((product) =>
+            product.id === productId
+              ? { ...product, cantidadStock: newStock }
+              : product
+          )
+        );
         await Swal.fire({
           position: "center",
           icon: "success",

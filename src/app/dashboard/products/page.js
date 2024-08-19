@@ -24,7 +24,9 @@ export default function ProductsPage() {
         },
       });
       const data = await res.json();
-      setProducts(data);
+      // Ordenar los productos por ID
+      const sortedData = data.sort((a, b) => a.id - b.id);
+      setProducts(sortedData);
     } catch (error) {
       console.log(error);
     }
@@ -140,6 +142,13 @@ export default function ProductsPage() {
           setProducts((prevProducts) =>
             prevProducts.filter((product) => product.id !== productId)
           );
+          await Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Producto eliminado",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         } else {
           const errorData = await res.json();
           console.error("Error al eliminar el producto:", errorData.message);
@@ -158,7 +167,7 @@ export default function ProductsPage() {
             setEditingProduct(null);
             setIsAddModalOpen(true);
           }}
-          className="absolute bottom-10 right-10 bg-black shadow-lg rounded-full w-12 h-12 flex justify-center items-center"
+          className="fixed bottom-10 right-10 bg-black shadow-lg rounded-full w-12 h-12 flex justify-center items-center"
         >
           <IoAdd size={40} color="white" />
         </button>

@@ -7,7 +7,7 @@ import {
   IoHome,
   IoFileTrayStackedSharp,
   IoPeople,
-  IoChevronForwardSharp,
+  IoPersonCircle,
   IoChevronBackOutline,
 } from "react-icons/io5";
 import "../../styles/navbar.css";
@@ -34,18 +34,11 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
         {isClient && user.rol === "admin" && (
           <li>
             <Link href="/dashboard/user">
-              <IoPeople size={25} />
+              <IoPersonCircle size={29} />
               <span>Usuarios</span>
             </Link>
           </li>
         )}
-
-        {/* Nuevo enlace a Clientes */}
-        <li>
-          <Link href="/dashboard/clientes">
-            {isClient && <IoPeople size={25} />} <span>Clientes</span>
-          </Link>
-        </li>
 
         <li>
           <Link href="/dashboard/products">
@@ -60,6 +53,12 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
           </Link>
         </li>
       </ul>
+      {/* Nuevo enlace a Clientes */}
+      <li>
+        <Link href="/dashboard/clientes">
+          {isClient && <IoPeople size={25} />} <span>Clientes</span>
+        </Link>
+      </li>
       {abrirNavbar && (
         <div
           onClick={() => setAbrirNavbar(false)}

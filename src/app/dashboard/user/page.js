@@ -1,6 +1,6 @@
 "use client";
 import UserComponent from "@/components/userComponents/userComponent";
-import { IoAdd } from "react-icons/io5";
+import { IoPersonAddOutline } from "react-icons/io5";
 import UpdateUserModal from "@/components/userComponents/updateUser";
 import { useEffect, useState } from "react";
 import { useStore } from "@/stores/autenticacion";
@@ -162,9 +162,9 @@ export default function UserPage() {
       <div className="user-container">
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="absolute bottom-10 right-10 bg-black shadow-lg rounded-full w-12 h-12 flex justify-center items-center"
+          className="fixed bottom-10 right-10 bg-black shadow-lg rounded-full w-16 h-16 flex justify-center items-center"
         >
-          <IoAdd size={40} color="white" />
+          <IoPersonAddOutline size={30} color="white" />
         </button>
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">Usuarios</h1>
         {users.length > 0 && (
@@ -191,7 +191,6 @@ export default function UserPage() {
           />
         )}
       </div>
-
     </>
   );
 }
