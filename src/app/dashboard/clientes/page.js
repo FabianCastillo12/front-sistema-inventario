@@ -23,12 +23,12 @@ export default function ClientePage() {
 
   useEffect(() => {
     setIsMounted(true);
-    //traerClientes(); // Comentado por ahora
+    traerClientes();
   }, []);
 
-  /*  const traerClientes = async () => { // Comentado por ahora
+  const traerClientes = async () => { 
     try {
-      const res = await fetch("http://localhost:3010/cliente/", { 
+      const res = await fetch("http://localhost:3010/clientes/", { 
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -39,7 +39,7 @@ export default function ClientePage() {
     } catch (error) {
       console.log(error);
     }
-  }; */
+  }; 
 
   if (user.rol !== "admin") {
     return null;
