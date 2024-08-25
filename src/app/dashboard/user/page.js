@@ -6,8 +6,11 @@ import { useEffect, useState } from "react";
 import { useStore } from "@/stores/autenticacion";
 import AddUserModal from "@/components/userComponents/addUser";
 import Swal from "sweetalert2";
+import { useSession } from "next-auth/react";
 
 export default function UserPage() {
+  const { data: session, status } = useSession();
+  console.log("usuarioss",session.user.rol)
   const user = useStore((state) => state.user);
   const [users, setUsers] = useState([]);
   console.log(users);
@@ -25,7 +28,7 @@ export default function UserPage() {
     try {
       const res = await fetch("http://localhost:3010/auth/", {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
         },
       });
       const data = await res.json();
@@ -35,7 +38,7 @@ export default function UserPage() {
       console.log(error);
     }
   };
-  if (user.rol !== "admin") {
+  if (session?.user?.rol !== "admin") {
     return null;
   }
 
@@ -45,7 +48,7 @@ export default function UserPage() {
       const res = await fetch(`http://localhost:3010/auth/${id}`, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
@@ -99,7 +102,7 @@ export default function UserPage() {
         const res = await fetch(`http://localhost:3010/auth/${userId}`, {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${session.user.token}`,
           },
         });
 
@@ -133,7 +136,7 @@ export default function UserPage() {
     const res = await fetch("http://localhost:3010/auth/", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${session.user.token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newUser),

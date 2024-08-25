@@ -9,11 +9,14 @@ import {
   IoPeople,
   IoPersonCircle,
   IoChevronBackOutline,
+  IoLogIn,
 } from "react-icons/io5";
 import "../../styles/navbar.css";
 import { useStore } from "@/stores/autenticacion";
+import { signIn, useSession,signOut } from "next-auth/react";
 
 const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
+  const { data: session, status } = useSession();
   const user = useStore((state) => state.user);
   const [isClient, setIsClient] = useState(false);
 
@@ -31,7 +34,7 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
           </Link>
         </li>
 
-        {isClient && user.rol === "admin" && (
+        {isClient && session?.user.rol === "admin" && (
           <li>
             <Link href="/dashboard/user">
               <IoPersonCircle size={29} />
@@ -57,6 +60,11 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
       <li>
         <Link href="/dashboard/clientes">
           {isClient && <IoPeople size={25} />} <span>Clientes</span>
+        </Link>
+      </li>
+      <li className=" pt-20">
+        <Link href="/" onClick={()=>signOut()}>
+          {isClient && <IoLogIn size={25} />} <span>Cerrar Sesion</span>
         </Link>
       </li>
       {abrirNavbar && (

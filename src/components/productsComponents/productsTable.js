@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import ProductModal from "@/components/productsComponents/editProduct";
 import { useStore } from "@/stores/autenticacion";
+import { useSession } from "next-auth/react";
 
 const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [formDataEdit, setFormDataEdit] = useState(null);
   const [productList, setProductList] = useState(products);
   const user = useStore((state) => state.user);
-
+  const { data: session, status } = useSession();
   useEffect(() => {
     setProductList(products);
   }, [products]);
@@ -43,7 +44,7 @@ const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
                 >
                   Modificar
                 </button>
-                {user.rol === "admin" && (
+                {session.user.rol === "admin" && (
                   <button
                     onClick={() => onDeleteProduct(product.id)}
                     className="bg-red-600 ml-1 text-white py-1 px-3 rounded hover:bg-red-700"

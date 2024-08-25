@@ -4,13 +4,14 @@ import StockList from "@/components/stockComponents/stockList";
 import UpdateStockModal from "@/components/stockComponents/updateStock";
 import { useStore } from "@/stores/autenticacion";
 import Swal from "sweetalert2";
+import { useSession } from "next-auth/react";
 
 export default function StockPage() {
   const [stock, setStock] = useState([]);
   const user = useStore((state) => state.user);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
-
+  const { data: session, status } = useSession();
   useEffect(() => {
     fetchStock();
   }, []);
@@ -20,7 +21,7 @@ export default function StockPage() {
     try {
       const res = await fetch("http://localhost:3010/producto/", {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
         },
       });
 
@@ -51,7 +52,7 @@ export default function StockPage() {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
         },
         body: JSON.stringify({ cantidadStock: newStock }),
       });

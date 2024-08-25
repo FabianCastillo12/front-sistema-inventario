@@ -3,11 +3,12 @@ import ClienteComponent from "@/components/clienteComponents/clienteComponent";
 import { IoAdd } from "react-icons/io5";
 import UpdateClienteModal from "@/components/clienteComponents/updateCliente";
 import { useEffect, useState } from "react";
-import { useStore } from "@/stores/autenticacion";
+
 import AddClienteModal from "@/components/clienteComponents/addCliente";
+import { useSession } from "next-auth/react";
 
 export default function ClientePage() {
-  const user = useStore((state) => state.user);
+  const {data:session}=useSession()
   const [clientes, setClientes] = useState([]); //Comentado por el momento para usar datos de ejemplo de cliente----
   console.log(clientes);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -30,7 +31,7 @@ export default function ClientePage() {
     try {
       const res = await fetch("http://localhost:3010/clientes/", { 
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
         },
       });
       const data = await res.json();
@@ -41,7 +42,7 @@ export default function ClientePage() {
     }
   }; 
 
-  if (user.rol !== "admin") {
+  if (session.user.rol !== "admin") {
     return null;
   }
 

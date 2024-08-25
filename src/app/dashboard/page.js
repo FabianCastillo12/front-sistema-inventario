@@ -4,8 +4,10 @@ import { redirect, usePathname } from "next/navigation";
 
 import { useEffect } from "react";
 import { HashLoader } from "react-spinners";
-
+import { signIn, useSession,signOut } from "next-auth/react";
 export default function createPost() {
+  const {data:sesión}=useSession()
+  console.log(sesión)
   const override = {
     display: "block",
     margin: "0 auto",

@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useStore } from "@/stores/autenticacion";
+import { useSession } from "next-auth/react";
 
 const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
+  const { data: session, status } = useSession();
   const [formData, setFormData] = useState({
     nombre: "",
     precio: "",
@@ -19,7 +21,7 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
       try {
         const res = await fetch("http://localhost:3010/categoria", {
           headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${session.user.token}`,
           },
         });
         const data = await res.json();

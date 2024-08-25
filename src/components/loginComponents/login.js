@@ -1,73 +1,72 @@
 "use client";
-import { useStore } from "@/stores/autenticacion";
+
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-
+import { signIn, useSession,signOut } from "next-auth/react";
 const LoginForm = () => {
-  const { addUser } = useStore();
+
   const router = useRouter();
   const [email, setEmail] = useState("");
-
+  const [errors, setErrors] = useState([]);
   const [password, setPassword] = useState("");
+  const { data: session, status } = useSession();
+  // useEffect(() => {
+  //   const item = localStorage.getItem("user-store");
+  //   if (item) {
+  //     const parsedItem = JSON.parse(item);
 
+  //     if (parsedItem.state.user.token) {
+  //       addUser(parsedItem);
+  //       router.push("/dashboard");
+  //     } else {
+  //       router.push("/");
+  //     }
+  //   } else {
+  //     router.push("/");
+  //   }
+  // }, []);
   useEffect(() => {
-    const item = localStorage.getItem("user-store");
-    if (item) {
-      const parsedItem = JSON.parse(item);
-
-      if (parsedItem.state.user.token) {
-        addUser(parsedItem);
-        router.push("/dashboard");
-      } else {
-        router.push("/");
-      }
-    } else {
-      router.push("/");
+    if (session) {
+      // Si la sesión está activa, redirigir al dashboard
+      router.push("/dashboard");
     }
-  }, []);
+  }, [session]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const datos = {
+    const responseNextAuth = await signIn("credentials", {
       email,
       password,
-    };
-    try {
-      const res = await fetch("http://localhost:3010/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datos),
-      });
+      redirect: false,
+    });
+    console.log("olitass",responseNextAuth)
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error("Error en la solicitud:", errorData);
-        throw new Error("Error en la solicitud");
-      }
+    if (responseNextAuth?.error) {
+      setErrors(responseNextAuth.error.split(","));
+      return;
+    }
 
-      const data = await res.json();
 
-      if (data.token) {
-        await Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Autenticacion exitoso",
-          showConfirmButton: false,
+ console.log("session" ,session)
+
+       if (responseNextAuth.ok) {
+         await Swal.fire({
+         position: "center",
+           icon: "success",
+         title: "Autenticacion exitoso",
+         showConfirmButton: false,
           timer: 1500,
         });
         router.push("/dashboard");
-        addUser(data);
-        localStorage.setItem("strinitem", JSON.stringify(data));
-      } else {
-        alert("credenciales incorrecto");
+     
+        // localStorage.setItem("token", JSON.stringify(session.user));
+      } 
+      else{
+        router.push("/");
       }
-    } catch (error) {
-      console.log(error);
-    }
+   
   };
 
   return (

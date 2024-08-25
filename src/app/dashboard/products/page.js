@@ -5,13 +5,15 @@ import { IoAdd } from "react-icons/io5";
 import ProductAddModal from "@/components/productsComponents/addProduct";
 import { useStore } from "@/stores/autenticacion";
 import Swal from "sweetalert2";
+import { useSession } from "next-auth/react";
 
 export default function ProductsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const user = useStore((state) => state.user);
-
+  const { data: session, status } = useSession();
+  console.log(session)
   useEffect(() => {
     traerProducto();
   }, []);
@@ -20,7 +22,7 @@ export default function ProductsPage() {
     try {
       const res = await fetch("http://localhost:3010/producto/", {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
         },
       });
       const data = await res.json();
@@ -37,7 +39,7 @@ export default function ProductsPage() {
       const res = await fetch("http://localhost:3010/producto/crear", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -80,7 +82,7 @@ export default function ProductsPage() {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${session.user.token}`,
         },
         body: JSON.stringify(datos),
       });
@@ -134,7 +136,7 @@ export default function ProductsPage() {
         const res = await fetch(`http://localhost:3010/producto/${productId}`, {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${session.user.token}`,
           },
         });
 
