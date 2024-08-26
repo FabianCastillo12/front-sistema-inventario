@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
 
-const AddClienteModal = ({ isOpen, onClose /*, onAddCliente*/ }) => { // onAddCliente comentado
+const AddClienteModal = ({ isOpen, onClose , onAddCliente }) => { // onAddCliente comentado
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
-    telefono: "", // Nuevo campo
-    direccion: "", // Nuevo campo
+    telefono: "", 
+    direccion: "", 
   });
 
   const handleChange = (e) => {
@@ -17,8 +17,8 @@ const AddClienteModal = ({ isOpen, onClose /*, onAddCliente*/ }) => { // onAddCl
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Nuevo cliente:", formData); // Mostrar en consola
-    // onAddCliente(formData); // Comentado
+    console.log("Nuevo cliente:", formData); 
+    onAddCliente(formData); 
     onClose();
   };
 

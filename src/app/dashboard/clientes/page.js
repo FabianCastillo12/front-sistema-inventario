@@ -3,33 +3,28 @@ import ClienteComponent from "@/components/clienteComponents/clienteComponent";
 import { IoAdd } from "react-icons/io5";
 import UpdateClienteModal from "@/components/clienteComponents/updateCliente";
 import { useEffect, useState } from "react";
-
+import { useStore } from "@/stores/autenticacion";
 import AddClienteModal from "@/components/clienteComponents/addCliente";
+import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 
 export default function ClientePage() {
-  const {data:session}=useSession()
-  const [clientes, setClientes] = useState([]); //Comentado por el momento para usar datos de ejemplo de cliente----
-  console.log(clientes);
+  const { data: session, status } = useSession();
+  const [clientes, setClientes] = useState([]);
+  const user = useStore((state) => state.user);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-
-  // Aquí va la declaración de clientes de ejmplo:
-  // const [clientes, setClientes] = useState([
-  //  { id: 1, nombre: 'Cliente 1', email: 'cliente1@example.com', telefono: '123-456-7890', direccion: 'Dirección 1' },
-  //  { id: 2, nombre: 'Cliente 2', email: 'cliente2@example.com', telefono: '987-654-3210', direccion: 'Dirección 2' },
-  // ]);
 
   useEffect(() => {
     setIsMounted(true);
     traerClientes();
   }, []);
 
-  const traerClientes = async () => { 
+  const traerClientes = async () => {
     try {
-      const res = await fetch("http://localhost:3010/clientes/", { 
+      const res = await fetch("http://localhost:3010/clientes/", {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -40,16 +35,12 @@ export default function ClientePage() {
     } catch (error) {
       console.log(error);
     }
-  }; 
+  };
 
-  if (session.user.rol !== "admin") {
-    return null;
-  }
-
-  /*  const handleUpdateCliente = async (updatedCliente) => { // Comentado por ahora
-    const { id, ...clienteData } = updatedCliente; 
+  const handleUpdateCliente = async (updatedCliente) => {
+    const { id, ...clienteData } = updatedCliente;
     try {
-      const res = await fetch(`http://localhost:3010/cliente/${id}`, { 
+      const res = await fetch(`http://localhost:3010/clientes/${id}`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -60,30 +51,54 @@ export default function ClientePage() {
 
       if (res.ok) {
         await traerClientes();
-
-        // ... (código Swal.fire) ...
+        await Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Cliente actualizado",
+          showConfirmButton: false,
+          timer: 1500,
+        });
 
         setIsEditModalOpen(false);
       } else {
         const errorData = await res.json();
-        console.error("Error al actualizar el cliente:", errorData.message); 
-        // ... (código Swal.fire) ...
+        console.error("Error al actualizar el usuario:", errorData.message);
+        await Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error al actualizar el usuario",
+          showConfirmButton: true,
+        });
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
     }
-  }; */
+  };
 
-  /*  const handleDeleteUser = async (clienteId) => { // Comentado por ahora
-    const clienteToDelete = clientes.find((cliente) => cliente.id === clienteId); 
+  const handleDeleteCliente = async (clienteId) => {
+    const clienteToDelete = clientes.find(
+      (cliente) => cliente.id === clienteId
+    );
 
-    if (!clienteToDelete) return;
+    if (!clienteToDelete) {
+      console.error("Cliente no encontrado");
+      return;
+    }
 
-    // ... (código Swal.fire) ...
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: `Se eliminará el cliente ${clienteToDelete.nombre}. Esta acción no se puede deshacer.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3010/cliente/${clienteId}`, { 
+        const res = await fetch(`http://localhost:3010/clientes/${clienteId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -91,21 +106,40 @@ export default function ClientePage() {
         });
 
         if (res.ok) {
-          setClientes(clientes.filter((cliente) => cliente.id !== clienteId)); 
-          // ... (código Swal.fire) ...
+          setClientes((prevClients) =>
+            prevClients.filter((cliente) => cliente.id !== clienteId)
+          );
+          await Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Cliente eliminado",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         } else {
           const errorData = await res.json();
-          console.error("Error al eliminar el cliente:", errorData.message); 
-          // ... (código Swal.fire) ...
+          console.error("Error al eliminar el cliente:", errorData.message);
+          await Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error al eliminar el cliente",
+            text: errorData.message,
+          });
         }
       } catch (error) {
         console.error("Error en la solicitud:", error);
+        await Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error en la solicitud",
+          text: error.message,
+        });
       }
     }
-  }; */
+  };
 
-  /*  const handleAddUser = async (newCliente) => { // Comentado por ahora
-    const res = await fetch("http://localhost:3010/cliente/", { 
+  const handleAddCliente = async (newCliente) => {
+    const res = await fetch("http://localhost:3010/clientes/", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -115,12 +149,20 @@ export default function ClientePage() {
     });
     const data = await res.json();
 
-    if (data) {
-      setClientes((prevClientes) => [...prevClientes, data]); 
-      // ... (código Swal.fire) ...
+    if (res.ok) {
+      await traerClientes();
       setIsAddModalOpen(false);
+      await Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Cliente agregado",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      console.error("Error al agregar el producto:", data.message);
     }
-  }; */
+  };
 
   if (!isMounted) {
     return null;
@@ -142,22 +184,21 @@ export default function ClientePage() {
             setSelectedCliente(cliente);
             setIsEditModalOpen(true);
           }}
-          // onDeleteCliente={handleDeleteCliente}
+          onDeleteCliente={handleDeleteCliente}
         />
         <AddClienteModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
-          // onAddCliente={handleAddCliente}
+          onAddCliente={handleAddCliente}
         />
-        {isEditModalOpen &&
-          selectedCliente && ( // Descomentado
-            <UpdateClienteModal
-              cliente={selectedCliente}
-              isOpen={isEditModalOpen}
-              onClose={() => setIsEditModalOpen(false)}
-              // onUpdateCliente={handleUpdateCliente}  // Mantén esto comentado
-            />
-          )}
+        {isEditModalOpen && selectedCliente && (
+          <UpdateClienteModal
+            cliente={selectedCliente}
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            onUpdateCliente={handleUpdateCliente}
+          />
+        )}
       </div>
     </>
   );

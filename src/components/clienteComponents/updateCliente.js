@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 export default function UpdateClienteModal({ // Nombre adaptado
-  cliente, // Nombre adaptado
+  cliente, 
   isOpen,
   onClose,
-  // onUpdateCliente, // Comentado
+  onUpdateCliente
 }) {
   const [formData, setFormData] = useState({ ...cliente });
 
@@ -22,8 +22,8 @@ export default function UpdateClienteModal({ // Nombre adaptado
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Cliente actualizado:", formData); // Mostrar en consola
-    // onUpdateCliente(formData); // Comentado
+    console.log("Cliente actualizado:", formData); 
+    onUpdateCliente(formData); 
     onClose();
   };
 
@@ -78,7 +78,6 @@ export default function UpdateClienteModal({ // Nombre adaptado
               required
             />
           </div>
-          {/* Eliminar la sección de Rol */}
           <div className="flex justify-end space-x-4">
             <button
               type="button"

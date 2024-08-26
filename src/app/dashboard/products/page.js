@@ -13,7 +13,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const user = useStore((state) => state.user);
   const { data: session, status } = useSession();
-  console.log(session)
+  console.log(session);
   useEffect(() => {
     traerProducto();
   }, []);
@@ -51,7 +51,7 @@ export default function ProductsPage() {
         }),
       });
       const data = await res.json();
-
+      
       if (res.ok) {
         await traerProducto();
         setIsAddModalOpen(false);
@@ -118,12 +118,12 @@ export default function ProductsPage() {
   };
 
   const handleDeleteProduct = async (productId) => {
-    const prodcutToDelete = products.find(
+    const productToDelete = products.find(
       (product) => product.id === productId
     );
     const result = await Swal.fire({
       title: "¿Estás seguro?",
-      text: `Se eliminará el producto ${prodcutToDelete.name}. Esta acción no se puede deshacer.`,
+      text: `Se eliminará el producto ${productToDelete.name}. Esta acción no se puede deshacer.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
