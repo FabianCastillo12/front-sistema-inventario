@@ -1,4 +1,4 @@
-import NavbarTop from "@/app/(login)/components/navbarTop";
+import NavbarTop from "./components/navbarTop";
 import Navbar from "./components/navbar";
 import "../../styles/dashboard.css";
 

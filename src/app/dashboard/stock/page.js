@@ -1,105 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import StockList from "@/app/dashboard/stock/components/stockList";
 import UpdateStockModal from "@/app/dashboard/stock/components/updateStock";
-import { useStore } from "@/stores/autenticacion";
-import Swal from "sweetalert2";
-import { useSession } from "next-auth/react";
+import { useStock } from "@/hooks/useStock";
 
 export default function StockPage() {
-  const [stock, setStock] = useState([]);
-  const user = useStore((state) => state.user);
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [currentProduct, setCurrentProduct] = useState(null);
-  const { data: session, status } = useSession();
-  useEffect(() => {
-    fetchStock();
-  }, []);
-
-  const fetchStock = async () => {
-    console.log("Fetching stock...");
-    try {
-      const res = await fetch("http://localhost:3010/producto/", {
-        headers: {
-          Authorization: `Bearer ${session.user.token}`,
-        },
-      });
-
-      if (!res.ok) {
-        console.error("Error fetching stock:", res.statusText);
-        return;
-      }
-
-      const data = await res.json();
-      // Ordenar los productos por ID
-      const sortedData = data.sort((a, b) => a.id - b.id);
-      setStock(sortedData);
-      console.log("Stock fetched and sorted:", sortedData);
-    } catch (error) {
-      console.error("Error fetching stock:", error);
-    }
-  };
-
-  const handleUpdateStock = async (productId, newStock) => {
-    console.log(
-      "Handling stock update for product ID:",
-      productId,
-      "New stock:",
-      newStock
-    );
-    try {
-      const res = await fetch(`http://localhost:3010/producto/${productId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.token}`,
-        },
-        body: JSON.stringify({ cantidadStock: newStock }),
-      });
-
-      if (res.ok) {
-        console.log("Stock update successful");
-        // Actualiza solo el producto en el estado
-        setStock((prevStock) =>
-          prevStock.map((product) =>
-            product.id === productId
-              ? { ...product, cantidadStock: newStock }
-              : product
-          )
-        );
-        await Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Stock actualizado",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } else {
-        const data = await res.json();
-        console.error("Error updating stock:", data.message);
-        await Swal.fire({
-          position: "center",
-          icon: "error",
-          title: `Error: ${data.message}`,
-          showConfirmButton: true,
-        });
-      }
-    } catch (error) {
-      console.error("Error updating stock:", error);
-    }
-  };
-
-  const openUpdateModal = (product) => {
-    console.log("Opening update modal for product:", product);
-    setCurrentProduct(product);
-    setIsUpdateModalOpen(true);
-  };
-
-  const closeUpdateModal = () => {
-    console.log("Closing update modal");
-    setIsUpdateModalOpen(false);
-    setCurrentProduct(null);
-  };
+  const {
+    stock,
+    isUpdateModalOpen,
+    currentProduct,
+    openUpdateModal,
+    closeUpdateModal,
+    handleUpdateStock,
+  } = useStock();
 
   return (
     <div className="stock-container p-6 bg-white rounded-md shadow-md">

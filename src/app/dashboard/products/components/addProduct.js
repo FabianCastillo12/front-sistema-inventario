@@ -73,6 +73,13 @@ const ProductAddModal = ({ isOpen, onClose, onAddProduct, product }) => {
     };
 
     onAddProduct(productData);
+    setFormData({
+      nombre: "",
+      precio: "",
+      cantidadStock: "",
+      unidad_medida: "",
+      estado: "",
+    })
     onClose();
   };
 

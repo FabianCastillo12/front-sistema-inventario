@@ -7,7 +7,7 @@ const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
     email: "",
     password: "",
     confir_password: "",
-    role: "user", // Valor predeterminado
+    role: "user", 
   });
 
   const handleChange = (e) => {
@@ -17,8 +17,14 @@ const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
   console.log(formData);
   const handleSubmit = (e) => {
     e.preventDefault();
-
     onAddUser(formData);
+    setFormData({
+      nombre: "",
+      email: "",
+      password: "",
+      confir_password: "",
+      role: "user",
+    });
     onClose();
   };
 
