@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import StockList from "@/components/stockComponents/stockList";
-import UpdateStockModal from "@/components/stockComponents/updateStock";
+import StockList from "@/app/dashboard/stock/components/stockList";
+import UpdateStockModal from "@/app/dashboard/stock/components/updateStock";
 import { useStore } from "@/stores/autenticacion";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";

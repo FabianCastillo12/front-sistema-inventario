@@ -1,10 +1,10 @@
 "use client";
-import UserComponent from "@/components/userComponents/userComponent";
+import UserComponent from "@/app/dashboard/user/components/userComponent";
 import { IoPersonAddOutline } from "react-icons/io5";
-import UpdateUserModal from "@/components/userComponents/updateUser";
+import UpdateUserModal from "@/app/dashboard/user/components/updateUser";
 import { useEffect, useState } from "react";
 import { useStore } from "@/stores/autenticacion";
-import AddUserModal from "@/components/userComponents/addUser";
+import AddUserModal from "@/app/dashboard/user/components/addUser";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 

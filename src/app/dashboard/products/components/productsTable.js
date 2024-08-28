@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ProductModal from "@/components/productsComponents/editProduct";
+import ProductModal from "@/app/dashboard/products/components/editProduct";
 import { useStore } from "@/stores/autenticacion";
 import { useSession } from "next-auth/react";
 

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { IoMenu, IoNotifications, IoPerson, IoSearch } from "react-icons/io5";
-import Navbar from "../dashboardComponents/navbar";
+import Navbar from "../../dashboard/components/navbar";
 
 export default function NavbarTop() {
   const [abrirNavbar, setAbrirNavbar] = useState(false);

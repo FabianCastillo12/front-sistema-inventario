@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ProductTable from "@/components/productsComponents/productsTable";
+import ProductTable from "@/app/dashboard/products/components/productsTable";
 import { IoAdd } from "react-icons/io5";
-import ProductAddModal from "@/components/productsComponents/addProduct";
+import ProductAddModal from "@/app/dashboard/products/components/addProduct";
 import { useStore } from "@/stores/autenticacion";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 // **COMENTADO POR AHORA - IMPLEMENTAR MÁS ADELANTE**
-import OrderModal from "@/components/ordersComponents/editOrder";
+import OrderModal from "@/app/dashboard/orders/components/editOrder";
 import { useStore } from "@/stores/autenticacion";
 import { useSession } from "next-auth/react";
-import ViewOrderModal from "@/components/ordersComponents/viewOrder"; // **NUEVA IMPORTACIÓN**
+import ViewOrderModal from "@/app/dashboard/orders/components/viewOrder"; // **NUEVA IMPORTACIÓN**
 
 const OrdersTable = ({ orders /* onDeleteOrder, onUpdateOrder */ }) => { // Parámetros comentados por ahora
   // **COMENTADO POR AHORA - IMPLEMENTAR MÁS ADELANTE**

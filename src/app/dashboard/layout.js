@@ -1,5 +1,5 @@
-import NavbarTop from "@/components/navbarComponents/navbarTop";
-import Navbar from "../../components/dashboardComponents/navbar";
+import NavbarTop from "@/app/(login)/components/navbarTop";
+import Navbar from "./components/navbar";
 import "../../styles/dashboard.css";
 
 export default function DashboardLayout({ children }) {

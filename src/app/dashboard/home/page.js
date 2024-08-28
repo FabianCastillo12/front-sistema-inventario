@@ -1,9 +1,9 @@
 "use client";
 import { useStore } from "@/stores/autenticacion";
-import ItemsHome from "@/components/itemHome/itemsHome";
-import { LineChartHero } from "@/components/graficos/linea";
-import { BarChartExampleWithGroups } from "@/components/graficos/barras";
-import { ProgressCircleUsageExample } from "@/components/graficos/progreso";
+import ItemsHome from "@/app/dashboard/home/components/itemsHome";
+import { LineChartHero } from "@/app/dashboard/home/components/linea";
+import { BarChartExampleWithGroups } from "@/app/dashboard/home/components/barras";
+import { ProgressCircleUsageExample } from "./components/progreso";
 
 export default function DashboardPage() {
   const user = useStore((state) => state.user);

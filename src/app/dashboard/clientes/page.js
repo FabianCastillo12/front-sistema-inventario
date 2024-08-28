@@ -1,10 +1,10 @@
 "use client";
-import ClienteComponent from "@/components/clienteComponents/clienteComponent";
+import ClienteComponent from "@/app/dashboard/clientes/components/clienteComponent";
 import { IoAdd } from "react-icons/io5";
-import UpdateClienteModal from "@/components/clienteComponents/updateCliente";
+import UpdateClienteModal from "@/app/dashboard/clientes/components/updateCliente";
 import { useEffect, useState } from "react";
 import { useStore } from "@/stores/autenticacion";
-import AddClienteModal from "@/components/clienteComponents/addCliente";
+import AddClienteModal from "@/app/dashboard/clientes/components/addCliente";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 

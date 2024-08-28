@@ -12,7 +12,7 @@ import {
   IoLogIn,
   IoReceipt,
 } from "react-icons/io5";
-import "../../styles/navbar.css";
+import "../../../styles/navbar.css";
 import { useStore } from "@/stores/autenticacion";
 import { signIn, useSession, signOut } from "next-auth/react";
 

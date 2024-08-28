@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/dashboard.css"; // Importa navbar.css
-import BarChartExampleWithGroups from "../graficos/barras";
-import LineChartUsageExample from "../graficos/linea";
+import BarChartExampleWithGroups from "../home/components/barras";
+import LineChartUsageExample from "../home/components/linea";
 
 const Dashboard = () => {
   return (

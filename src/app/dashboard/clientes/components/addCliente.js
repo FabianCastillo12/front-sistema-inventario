@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-const AddClienteModal = ({ isOpen, onClose , onAddCliente }) => { // onAddCliente comentado
+const AddClienteModal = ({ isOpen, onClose , onAddCliente }) => { 
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
