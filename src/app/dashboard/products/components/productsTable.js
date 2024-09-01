@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import ProductModal from "@/app/dashboard/products/components/editProduct";
-import { useStore } from "@/stores/autenticacion";
+
 import { useSession } from "next-auth/react";
 
-const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
+const ProductTable = ({ products, onDeleteProduct, onUpdateProduct,categoria }) => {
+  console.log(categoria)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [formDataEdit, setFormDataEdit] = useState(null);
   const [productList, setProductList] = useState(products);
-  const user = useStore((state) => state.user);
+
   const { data: session, status } = useSession();
   useEffect(() => {
     setProductList(products);
@@ -35,7 +36,7 @@ const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
             <tr key={product.id}>
               <td className="py-2 px-4 border-b">{product.id}</td>
               <td className="py-2 px-4 border-b">{product.nombre}</td>
-              <td className="py-2 px-4 border-b">{product.precio}</td>
+              <td className="py-2 px-4 border-b">{ Number( product.precio).toFixed(2)}</td>
               <td className="py-2 px-4 border-b">{product.categoria.nombre}</td>
               <td className="py-2 px-4 border-b">
                 <button
@@ -63,6 +64,7 @@ const ProductTable = ({ products, onDeleteProduct, onUpdateProduct }) => {
           setIsEditModalOpen={setIsEditModalOpen}
           formDataEdit={formDataEdit}
           onUpdateProduct={onUpdateProduct}
+          categoria={categoria}
         />
       )}
     </div>

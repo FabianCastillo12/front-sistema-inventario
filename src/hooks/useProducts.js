@@ -1,18 +1,35 @@
+
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 
-export function useProducts() {
+export function useProducts() { 
+  const [categoria,setCategoria]=useState([])
   const [products, setProducts] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const { data: session } = useSession();
-
+console.log(categoria,products)
   useEffect(() => {
     if (session?.user?.token) {
       fetchProducts();
+      fetchCategoria();
     }
   }, [session]);
+  const  fetchCategoria=async()=>{
+    try {
+      const res = await fetch("http://localhost:3010/categoria", {
+        headers: {
+          Authorization: `Bearer ${session.user.token}`,
+        },
+      });
+      const data = await res.json();
+       setCategoria(data)
+       console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const fetchProducts = async () => {
     try {
@@ -39,7 +56,7 @@ export function useProducts() {
         body: JSON.stringify(newProduct),
       });
       if (res.ok) {
-        await fetchProducts();
+        await fetchProducts()
         setIsAddModalOpen(false);
         await Swal.fire({
           position: "center",
@@ -63,35 +80,45 @@ export function useProducts() {
         precio: Number(formData.precio),
         categoria: formData.categoria,
       };
-      console.log(datos);
-      const res = await fetch(`http://localhost:3010/producto/${formData.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.token}`,
-        },
-        body: JSON.stringify(datos),
+     
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "deseas actualizar ",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, actualizar",
+        cancelButtonText: "Cancelar",
       });
-      const data = await res.json();
-      console.log(data);
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`http://localhost:3010/producto/${formData.id}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.user.token}`,
+            },
+            body: JSON.stringify(datos),
+          });
+          const data = await res.json();
+          console.log(data);
+          if (res.ok) {
+            await fetchProducts()
+            await Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Producto actualizado",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } 
+        } catch (error) {
+          console.error("Error en la solicitud:", error);
+        }
 
-      if (res.ok) {
-        await fetchProducts();
-        await Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Producto actualizado",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } else {
-        console.error("Error al modificar el producto:", data.message);
-        await Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "Error al actualizar el producto",
-          showConfirmButton: true,
-        });
+
+      
       }
     } catch (error) {
       console.log(error);
@@ -147,5 +174,6 @@ export function useProducts() {
     handleAddProduct,
     handleUpdateProduct,
     handleDeleteProduct,
+    categoria
   };
 }

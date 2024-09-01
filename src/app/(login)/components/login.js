@@ -5,27 +5,14 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { signIn, useSession,signOut } from "next-auth/react";
 const LoginForm = () => {
-
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState([]);
   const [password, setPassword] = useState("");
-  const { data: session, status } = useSession();
-  // useEffect(() => {
-  //   const item = localStorage.getItem("user-store");
-  //   if (item) {
-  //     const parsedItem = JSON.parse(item);
 
-  //     if (parsedItem.state.user.token) {
-  //       addUser(parsedItem);
-  //       router.push("/dashboard");
-  //     } else {
-  //       router.push("/");
-  //     }
-  //   } else {
-  //     router.push("/");
-  //   }
-  // }, []);
+
+  
+ 
   useEffect(() => {
     if (session) {
       // Si la sesión está activa, redirigir al dashboard
