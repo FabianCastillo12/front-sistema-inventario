@@ -9,7 +9,7 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState([]);
   const [password, setPassword] = useState("");
-
+  const { data: session, status } = useSession();
 
   
  
