@@ -6,8 +6,12 @@ import OrderAddModal from "@/app/dashboard/orders/components/addOrder";
 import { useStore } from "@/stores/autenticacion";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
+import { usePedidos } from "@/hooks/usePedidos"
 
 export default function OrdersPage() {
+  const { pedidos } = usePedidos();
+  console.log(pedidos);
+  
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingOrder, setEditingOrder] = useState(null);
   const [orders, setOrders] = useState([]); 
@@ -203,7 +207,7 @@ const handleViewOrder = (order) => {
         </button>
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">Pedidos</h1>
         <OrdersTable
-          orders={orders} 
+          orders={pedidos} 
           onEditOrder={handleEditOrder}
           onDeleteOrder={handleDeleteOrder}
           onUpdateOrder={handleUpdateOrder} 

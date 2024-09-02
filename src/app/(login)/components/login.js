@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { signIn, useSession,signOut } from "next-auth/react";
+import { signIn, useSession, signOut } from "next-auth/react";
 const LoginForm = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -11,11 +11,8 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const { data: session, status } = useSession();
 
-  
- 
   useEffect(() => {
     if (session) {
-      // Si la sesión está activa, redirigir al dashboard
       router.push("/dashboard");
     }
   }, [session]);
@@ -28,32 +25,26 @@ const LoginForm = () => {
       password,
       redirect: false,
     });
-    console.log("olitass",responseNextAuth)
+    console.log("olitass", responseNextAuth);
 
     if (responseNextAuth?.error) {
       setErrors(responseNextAuth.error.split(","));
       return;
     }
+    console.log("session", session);
 
-
- console.log("session" ,session)
-
-       if (responseNextAuth.ok) {
-         await Swal.fire({
-         position: "center",
-           icon: "success",
-         title: "Autenticacion exitoso",
-         showConfirmButton: false,
-          timer: 1500,
-        });
-        router.push("/dashboard");
-     
-        // localStorage.setItem("token", JSON.stringify(session.user));
-      } 
-      else{
-        router.push("/");
-      }
-   
+    if (responseNextAuth.ok) {
+      await Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Autenticacion exitoso",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      router.push("/dashboard");
+    } else {
+      router.push("/");
+    }
   };
 
   return (

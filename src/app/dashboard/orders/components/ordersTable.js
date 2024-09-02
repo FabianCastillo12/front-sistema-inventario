@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-// **COMENTADO POR AHORA - IMPLEMENTAR M√ÅS ADELANTE**
 import OrderModal from "@/app/dashboard/orders/components/editOrder";
 import { useStore } from "@/stores/autenticacion";
 import { useSession } from "next-auth/react";
-import ViewOrderModal from "@/app/dashboard/orders/components/viewOrder"; // **NUEVA IMPORTACI√ìN**
+import ViewOrderModal from "@/app/dashboard/orders/components/viewOrder";
 
-const OrdersTable = ({ orders /* onDeleteOrder, onUpdateOrder */ }) => { // Par√°metros comentados por ahora
-  // **COMENTADO POR AHORA - IMPLEMENTAR M√ÅS ADELANTE**
+const OrdersTable = ({ orders }) => {
+  console.log(orders);
+  
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [formDataEdit, setFormDataEdit] = useState(null);
 
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false); // NUEVO ESTADO**
-  const [formDataView, setFormDataView] = useState(null); // NUEVO ESTADO** 
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [formDataView, setFormDataView] = useState(null);
 
   const [orderList, setOrderList] = useState(orders);
   const user = useStore((state) => state.user);
@@ -21,15 +21,18 @@ const OrdersTable = ({ orders /* onDeleteOrder, onUpdateOrder */ }) => { // Par√
     setOrderList(orders);
   }, [orders]);
 
-  // **COMENTADO POR AHORA - IMPLEMENTAR M√ÅS ADELANTE**
   const editOrder = (open, order) => {
     setIsEditModalOpen(open);
     setFormDataEdit(order);
   };
-  const viewOrder = (open, order) => { // NUEVA FUNCI√ìN**
+  const viewOrder = (open, order) => {
     setIsViewModalOpen(open);
     setFormDataView(order);
   };
+
+  if (!Array.isArray(orders)) {
+    return <div>No hay pedidos disponibles</div>;
+  }
 
   return (
     <div>
@@ -48,8 +51,8 @@ const OrdersTable = ({ orders /* onDeleteOrder, onUpdateOrder */ }) => { // Par√
           {orderList.map((order) => (
             <tr key={order.id}>
               <td className="py-2 px-4 border-b">{order.id}</td>
-              <td className="py-2 px-4 border-b">{order.fecha}</td>
-              <td className="py-2 px-4 border-b">{order.cliente}</td>
+              <td className="py-2 px-4 border-b">{order.fecha_pedido}</td>
+              <td className="py-2 px-4 border-b">{order.cliente.nombre}</td>
               <td className="py-2 px-4 border-b">{order.total}</td>
               <td className="py-2 px-4 border-b">{order.estado}</td>
               <td className="py-2 px-4 border-b">
@@ -67,19 +70,17 @@ const OrdersTable = ({ orders /* onDeleteOrder, onUpdateOrder */ }) => { // Par√
                   Modificar
                 </button>
 
-
-
-                {session && session.user && session.user.rol === "admin" && (  /*Verifica si session es truthy (es decir, no es null, undefined o false).*/
-
-
-
-                  <button
-                    onClick={() => onDeleteOrder(order.id)}
-                    className="bg-red-600 ml-1 text-white py-1 px-3 rounded hover:bg-red-700"
-                  >
-                    Eliminar
-                  </button>
-                )}
+                {session &&
+                  session.user &&
+                  session.user.rol ===
+                    "admin" && (
+                    <button
+                      onClick={() => onDeleteOrder(order.id)}
+                      className="bg-red-600 ml-1 text-white py-1 px-3 rounded hover:bg-red-700"
+                    >
+                      Eliminar
+                    </button>
+                  )}
               </td>
             </tr>
           ))}
@@ -90,11 +91,8 @@ const OrdersTable = ({ orders /* onDeleteOrder, onUpdateOrder */ }) => { // Par√
         <OrderModal
           setIsEditModalOpen={setIsEditModalOpen}
           formDataEdit={formDataEdit}
-        // onUpdateOrder={onUpdateOrder} // Comentado por ahora
-
         />
       )}
-      {/* **NUEVO MODAL PARA VER PEDIDO** */}
       {isViewModalOpen && (
         <ViewOrderModal
           setIsViewModalOpen={setIsViewModalOpen}

@@ -18,13 +18,14 @@ export default function NavbarTop() {
         >
           <IoMenu color="white" size={25} />
         </div>
-        <div className="p-2   bg-[#21222D]   col-span-7 rounded-lg  md:rounded-md m-1 flex md:col-span-6 lg:col-span-8  gap-1 items-center ">
-          <IoSearch size={18} color="white" />
+        <div className="p-2   bg-[#171821]   col-span-7 rounded-lg  md:rounded-md m-1 flex md:col-span-6 lg:col-span-8  gap-1 items-center ">
+          {/* <IoSearch size={18} color="white" />
           <input
             type="search"
             className=" border-none bg-transparent text-white placeholder:text-white outline-none focus:outline-none focus:ring-0 focus:border-none w-full"
             placeholder="Search here..."
           />
+          */}
         </div>
         <div className="p-2 rounded-md m-1 col-span-3 flex  gap-6 items-center justify-end lg:col-span-4">
           <IoNotifications size={25} color="white" />

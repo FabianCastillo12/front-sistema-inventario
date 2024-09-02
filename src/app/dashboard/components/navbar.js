@@ -50,12 +50,7 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
             <span>Productos</span>
           </Link>
         </li>
-        <li>
-          <Link href="/dashboard/orders">
-            {isClient && <IoReceipt size={25} />}
-            <span>Pedidos</span>
-          </Link>
-        </li>
+        
         <li>
           <Link href="/dashboard/stock">
             {isClient && <IoFileTrayStackedSharp size={25} />}
@@ -67,11 +62,18 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
             {isClient && <IoPeople size={25} />} <span>Clientes</span>
           </Link>
         </li>
+        <li>
+          <Link href="/dashboard/orders">
+            {isClient && <IoReceipt size={25} />}
+            <span>Pedidos</span>
+          </Link>
+        </li>
         <li className="pt-20">
           <Link href="/" onClick={() => signOut()}>
             {isClient && <IoLogIn size={25} />} <span>Cerrar Sesion</span>
           </Link>
         </li>
+        
       </ul>
       {abrirNavbar && (
         <div
@@ -80,6 +82,7 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
         >
           <IoChevronBackOutline size={20} />
         </div>
+        
       )}
     </nav>
   );
