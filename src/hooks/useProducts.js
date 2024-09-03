@@ -78,11 +78,10 @@ export function useProducts() {
         nombre: formData.nombre,
         precio: Number(formData.precio),
         categoria: formData.categoria,
-      };
-
+      }
       const result = await Swal.fire({
         title: "¿Estás seguro?",
-        text: "deseas actualizar ",
+        text: `Se actualizará el producto ${datos.nombre}.`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -107,6 +106,7 @@ export function useProducts() {
           console.log(data);
           if (res.ok) {
             await fetchProducts();
+            console.log(res)
             await Swal.fire({
               position: "center",
               icon: "success",

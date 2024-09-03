@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { usePedidos } from "@/hooks/usePedidos"
 
 export default function OrdersPage() {
-  const { pedidos } = usePedidos();
+  const { pedidos, handleAddOrder, handleDeleteOrder } = usePedidos();
   console.log(pedidos);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -17,91 +17,6 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState([]); 
   const user = useStore((state) => state.user);
   const { data: session, status } = useSession();
-
-  useEffect(() => {
-    // Lógica para obtener la información de pedidos del backend (endpoint /orders)
-    // **COMENTADO POR AHORA - IMPLEMENTAR MÁS ADELANTE**
-    // const traerOrders = async () => {
-    //   try {
-    //     const res = await fetch("http://localhost:3010/orders/", { 
-    //       headers: {
-    //         Authorization: `Bearer ${session.user.token}`,
-    //       },
-    //     });
-    //     const data = await res.json();
-    //     // Ordenar los pedidos por ID
-    //     const sortedData = data.sort((a, b) => a.id - b.id);
-    //     setOrders(sortedData);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-    // traerOrders();
-
-
-
-
-
-
-    // Simulación de datos de pedidos desde el backend
-    const simulatedOrders = [
-      { 
-        id: 1, 
-        fecha: "2023-10-27 10:00", 
-        cliente: "Juan Pérez", 
-        email: "juan.perez@email.com", // Nuevo campo
-        telefono: "123-456-7890", // Nuevo campo
-        direccion: "Calle Principal 123", // Nuevo campo
-        total: 100.00, 
-        estado: "Completado" 
-      },
-      { 
-        id: 2, 
-        fecha: "2023-10-27 12:30", 
-        cliente: "Maria González", 
-        email: "maria.gonzalez@email.com", // Nuevo campo
-        telefono: "987-654-3210", // Nuevo campo
-        direccion: "Avenida Secundaria 456", // Nuevo campo
-        total: 50.00, 
-        estado: " Pendiente" 
-      },
-    ];
-    setOrders(simulatedOrders); 
-  }, []);
-
-  const handleAddOrder = async (newOrder) => {
-    // **COMENTADO POR AHORA - IMPLEMENTAR MÁS ADELANTE**
-    // try {
-    //   const res = await fetch("http://localhost:3010/orders/crear", { // Endpoint a modificar
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: `Bearer ${session.user.token}`,
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(newOrder),
-    //   });
-    //   const data = await res.json();
-      
-    //   if (res.ok) {
-    //     await traerOrders();
-    //     setIsAddModalOpen(false);
-    //     await Swal.fire({
-    //       position: "center",
-    //       icon: "success",
-    //       title: "Order agregado",
-    //       showConfirmButton: false,
-    //       timer: 1500,
-    //     });
-    //   } else {
-    //     console.error("Error al agregar el Order:", data.message);
-    //   }
-    // } catch (error) {
-    //   console.error("Error en la solicitud:", error);
-    // }
-  };
-
-
-
 
   const handleUpdateOrder = async (formData) => {
     // **COMENTADO POR AHORA - IMPLEMENTAR MÁS ADELANTE**
@@ -145,46 +60,7 @@ export default function OrdersPage() {
     setIsAddModalOpen(true);
   };
 
-  const handleDeleteOrder = async (orderId) => {
-    // **COMENTADO POR AHORA - IMPLEMENTAR MÁS ADELANTE**
-    // const orderToDelete = orders.find((order) => order.id === orderId);
-    // const result = await Swal.fire({
-    //   title: "¿Estás seguro?",
-    //   text: `Se eliminará el pedido ${orderToDelete.name}. Esta acción no se puede deshacer.`, // Modificar texto
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Sí, eliminar",
-    //   cancelButtonText: "Cancelar",
-    // });
-    // if (result.isConfirmed) {
-    //   try {
-    //     const res = await fetch(`http://localhost:3010/orders/${orderId}`, { // Endpoint a modificar
-    //       method: "DELETE",
-    //       headers: {
-    //         Authorization: `Bearer ${session.user.token}`,
-    //       },
-    //     });
 
-    //     if (res.ok) {
-    //       setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
-    //       await Swal.fire({
-    //         position: "center",
-    //         icon: "success",
-    //         title: "Order eliminado",
-    //         showConfirmButton: false,
-    //         timer: 1500,
-    //       });
-    //     } else {
-    //       const errorData = await res.json();
-    //       console.error("Error al eliminar el Order:", errorData.message);
-    //     }
-    //   } catch (error) {
-    //     console.error("Error en la solicitud:", error);
-    //   }
-    // }
-  };
 
 // Función para manejar el botón "Ver" (por ahora vacía)
 
@@ -211,7 +87,7 @@ const handleViewOrder = (order) => {
           onEditOrder={handleEditOrder}
           onDeleteOrder={handleDeleteOrder}
           onUpdateOrder={handleUpdateOrder} 
-          onViewOrder={handleViewOrder} // **NUEVA LÍNEA**
+          onViewOrder={handleViewOrder} 
         />
         <OrderAddModal
           isOpen={isAddModalOpen}

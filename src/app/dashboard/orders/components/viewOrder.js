@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
-  const [formData, setFormData] = useState({
+  const formData = {
     id: formDataView.id,
-    fecha: formDataView.fecha,
+    fecha: formatearFechaISO(formDataView.fecha_pedido),
     cliente: formDataView.cliente.nombre,
     email: formDataView.cliente.email,
     telefono: formDataView.cliente.telefono,
@@ -11,13 +11,25 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
     detallePedidos: formDataView.detallePedidos,
     total: formDataView.total,
     estado: formDataView.estado,
-  });
-  console.log(formData);
+  };
+
   const currencyFormatter = new Intl.NumberFormat("es-PE", {
     style: "currency",
     currency: "PEN",
   });
 
+  function formatearFechaISO(fechaISO) {
+    const fecha = new Date(fechaISO);
+  
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear();
+    const horas = fecha.getHours().toString().padStart(2, '0');
+    const minutos = fecha.getMinutes().toString().padStart(2, '0');
+    const segundos = fecha.getSeconds().toString().padStart(2, '0');
+  
+    return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+  }
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50">
       <div
@@ -35,8 +47,8 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
           <div className="flex items-center">
             <i className="fas fa-bars mr-2"></i>
             <h2 className="font-medium mr-2">
-              Fecha del Pedido:{" "}
-              <span className="font-bold">{formData.fecha}</span>
+              Fecha del Pedido: 
+              <span className="font-bold"> {formData.fecha}</span>
             </h2>
           </div>
 
@@ -74,7 +86,6 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
           </div>
         </div>
 
-        {/* Tabla de Productos (Adaptado de ordersTable.js) */}
         <div className="p-4 border-t border-gray-200">
           <h3 className="text-lg font-medium mb-4">Productos</h3>
           <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -143,7 +154,6 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
             </div>
           </div>
         </div>
-
         <div className="pt-4 mt-4 border-t border-gray-200">
           <div className="flex justify-between mb-4">
             <div className="flex">
@@ -163,7 +173,6 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
             <div className="flex"></div>
           </div>
           <div className="flex justify-between mb-4">
-            {/* Última modificación */}
             <div className="flex">
               <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mr-2">
                 W
@@ -172,7 +181,6 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
                 {formData.cliente} - hace 2 minutos
               </span>
             </div>
-            {/* Botón Cerrar */}
             <div className="flex">
               <button
                 onClick={() => setIsViewModalOpen(false)}

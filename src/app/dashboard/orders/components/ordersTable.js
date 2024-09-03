@@ -4,7 +4,7 @@ import { useStore } from "@/stores/autenticacion";
 import { useSession } from "next-auth/react";
 import ViewOrderModal from "@/app/dashboard/orders/components/viewOrder";
 
-const OrdersTable = ({ orders }) => {
+const OrdersTable = ({ orders, onDeleteOrder }) => {
   console.log(orders);
   
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

@@ -9,6 +9,8 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCriteria, setSearchCriteria] = useState("nombre");
   const [filteredClientes, setFilteredClientes] = useState([]);
+  const [productSearchQuery, setProductSearchQuery] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -20,7 +22,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
           const nombre = cliente.nombre ? cliente.nombre.toLowerCase() : "";
           const dni = cliente.dni ? cliente.dni.toLowerCase() : "";
           const ruc = cliente.ruc ? cliente.ruc.toLowerCase() : "";
-          
+
           switch (searchCriteria) {
             case "nombre":
               return nombre.includes(queryLower);
@@ -36,6 +38,26 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
     }
   }, [searchQuery, searchCriteria, clientes]);
 
+  useEffect(() => {
+    if (productSearchQuery.trim() === "") {
+      setFilteredProducts([]);
+    } else {
+      const queryLower = productSearchQuery.toLowerCase();
+      setFilteredProducts(
+        products.filter((product) => {
+          const nombre = product.nombre ? product.nombre.toLowerCase() : "";
+          const descripcion = product.descripcion
+            ? product.descripcion.toLowerCase()
+            : "";
+
+          return (
+            nombre.includes(queryLower) || descripcion.includes(queryLower)
+          );
+        })
+      );
+    }
+  }, [productSearchQuery, products]);
+
   const [formData, setFormData] = useState({
     id: "",
     fecha: "",
@@ -44,11 +66,12 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
     telefono: "",
     direccion: "",
     productos: [],
+    total: 0,
   });
 
   useEffect(() => {
     if (isOpen) {
-      const currentDate = new Date().toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      const currentDate = new Date().toISOString().split("T")[0]; // Format date as YYYY-MM-DD
       setFormData((prevFormData) => ({
         ...prevFormData,
         fecha: currentDate,
@@ -68,46 +91,98 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddOrder(formData);
-    onClose();
+
+    if (!formData.id) {
+      alert("Por favor, seleccione un cliente.");
+      return;
+    }
+    if (formData.productos.length === 0) {
+      alert("Por favor, agregue al menos un producto.");
+      return;
+    }
+
+    const detalles = formData.productos.map((product) => ({
+      cantidad: product.cantidad,
+      productoId: product.id,
+    }));
+
+    const orderData = {
+      estado: "Registrado",
+      clienteId: formData.id,
+      detalles: detalles,
+    };
+    console.log("orderData", orderData);
+    onAddOrder(orderData);
+    setFormData({ clienteSeleccionadoId: "", productos: [] });
   };
 
   const handleEditProductRow = (index, field, value) => {
     const updatedProducts = [...formData.productos];
     updatedProducts[index][field] = value;
     setFormData({ ...formData, productos: updatedProducts });
+    calculateTotal(updatedProducts);
   };
 
   const handleDeleteProductRow = (index) => {
     const updatedProducts = formData.productos.filter((_, i) => i !== index);
     setFormData({ ...formData, productos: updatedProducts });
+    calculateTotal(updatedProducts);
   };
 
-  const handleAddProductRow = () => {
+  const handleAddProductRow = (product) => {
+    const isProductAlreadyAdded = formData.productos.some(
+      (p) => p.id === product.id
+    );
+
+    if (isProductAlreadyAdded) {
+      alert("El producto ya está en la lista.");
+      return;
+    }
+
     const newProduct = {
-      nombre: "",
-      descripcion: "",
+      id: product.id,
+      nombre: product.nombre,
+      descripcion: product.categoria.descripcion,
       cantidad: 1,
-      precioUnitario: 0,
-      impuestos: "IGV 18%",
-      impuestosNoIncluidos: 0,
+      precio: product.precio,
+      impuestos: product.precio * 0.18,
+      impuestosNoIncluidos: product.precio * 0.18,
     };
+    const updatedProducts = [...formData.productos, newProduct];
     setFormData({
       ...formData,
-      productos: [...formData.productos, newProduct],
+      productos: updatedProducts,
     });
+    calculateTotal(updatedProducts);
+    setProductSearchQuery("");
   };
 
   const handleClientSelect = (cliente) => {
     setFormData({
       ...formData,
+      id: cliente.id,
       nombre: cliente.nombre,
-      cliente: cliente.nombre,
       email: cliente.email,
       telefono: cliente.telefono,
       direccion: cliente.direccion,
     });
     setSearchQuery(""); // Clear search after selection
+  };
+
+  const calculateTotal = (productos) => {
+    const total = productos.reduce((acc, product) => {
+      return acc + product.precio * product.cantidad;
+    }, 0);
+
+    const igv = total * 0.18;
+    const baseImponible = total - igv;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      total: total,
+      igv: igv,
+      baseImponible: baseImponible,
+    }));
   };
 
   if (!isOpen) return null;
@@ -118,7 +193,6 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
         className="bg-white p-6 rounded-lg shadow-lg max-w-[calc(90vw-4rem)] w-full overflow-y-auto max-h-[calc(80vh-4rem)] scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100"
         style={{ scrollbarWidth: "none" }}
       >
-        {/* Encabezado */}
         <div className="flex items-center justify-between mb-4">
           <div className="text-2xl font-semibold">Agregar Pedido</div>
           <input
@@ -130,8 +204,6 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
             placeholder="Ingresa la fecha"
           />
         </div>
-
-        {/* Información del Cliente */}
         <div className="py-4 border-b pb-4">
           <div className="font-medium mb-2">Buscar Cliente:</div>
           <div className="flex mb-2 gap-20">
@@ -188,11 +260,9 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
             onChange={handleChange}
             className="border border-gray-300 rounded px-2 py-1 w-full"
             placeholder="Nombre del cliente"
-            readOnly
+            disabled
           />
-        </div>
-        <div className="py-4">
-          <div className="font-medium mb-2">Email:</div>
+          <div className="font-medium mb-2 mt-2">Email:</div>
           <input
             type="text"
             name="email"
@@ -200,11 +270,9 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
             onChange={handleChange}
             className="border border-gray-300 rounded px-2 py-1 w-full"
             placeholder="Email del cliente"
-            readOnly
+            disabled
           />
-        </div>
-        <div className="py-4">
-          <div className="font-medium mb-2">Teléfono:</div>
+          <div className="font-medium mb-2 mt-2">Teléfono:</div>
           <input
             type="text"
             name="telefono"
@@ -212,11 +280,9 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
             onChange={handleChange}
             className="border border-gray-300 rounded px-2 py-1 w-full"
             placeholder="Teléfono del cliente"
-            readOnly
+            disabled
           />
-        </div>
-        <div className="py-4">
-          <div className="font-medium mb-2">Dirección:</div>
+          <div className="font-medium mb-2 mt-2">Dirección:</div>
           <input
             type="text"
             name="direccion"
@@ -224,87 +290,112 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
             onChange={handleChange}
             className="border border-gray-300 rounded px-2 py-1 w-full"
             placeholder="Dirección del cliente"
-            readOnly
+            disabled
           />
         </div>
 
-        {/* Pestañas */}
-        <div className="flex border-b mb-4">
-          <div className="px-4 py-2 cursor-pointer border-b-2 border-blue-500 text-blue-500 font-medium">
-            Líneas del pedido
+        <div className="py-4 border-t pt-4">
+          <div className="font-medium mb-2">Buscar Producto:</div>
+          <div className="flex mb-2 gap-20">
+            <input
+              type="text"
+              value={productSearchQuery}
+              onChange={(e) => setProductSearchQuery(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 w-full"
+              placeholder="Buscar productos"
+            />
           </div>
+          {productSearchQuery.trim() && filteredProducts.length > 0 && (
+            <div className="border border-gray-300 rounded mt-2 max-h-48 overflow-y-auto">
+              <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <thead className="bg-[#05023c] text-white">
+                  <tr>
+                    <th className="py-2 px-4 border-b text-center">Nombre</th>
+                    <th className="py-2 px-4 border-b text-center">
+                      Descripción
+                    </th>
+                    <th className="py-2 px-4 border-b text-center">Precio</th>
+                    <th className="py-2 px-4 border-b text-center">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProducts.map((product) => (
+                    <tr
+                      key={product.id}
+                      onClick={() => handleAddProductRow(product)}
+                      className="cursor-pointer hover:bg-gray-100 text-center"
+                    >
+                      <td className="py-2 px-4 border-b">{product.nombre}</td>
+                      <td className="py-2 px-4 border-b">
+                        {product.descripcion}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        {currencyFormatter.format(product.precio)}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        <button className="bg-blue-500 text-white px-2 py-1 rounded">
+                          Agregar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
-        {/* Tabla de Productos */}
-        <div className="p-4 border-t border-gray-200">
-          <h3 className="text-lg font-semibold mb-4">Productos</h3>
-          <table className="w-full border border-gray-300">
-            <thead>
+        <div className="py-4">
+          <div className="font-medium mb-2">Productos Añadidos:</div>
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead className="bg-[#05023c] text-white">
               <tr>
-                <th className="border-b px-4 py-2">Nombre</th>
-                <th className="border-b px-4 py-2">Descripción</th>
-                <th className="border-b px-4 py-2">Cantidad</th>
-                <th className="border-b px-4 py-2">Precio Unitario</th>
-                <th className="border-b px-4 py-2">Impuestos</th>
-                <th className="border-b px-4 py-2">Impuestos No Incluidos</th>
-                <th className="border-b px-4 py-2">Acciones</th>
+                <th className="py-2 px-4 border-b text-center">Nombre</th>
+                <th className="py-2 px-4 border-b text-center">Descripción</th>
+                <th className="py-2 px-4 border-b text-center">Cantidad</th>
+                <th className="py-2 px-4 border-b text-center">Precio</th>
+                <th className="py-2 px-4 border-b text-center">Impuestos</th>
+                <th className="py-2 px-4 border-b text-center">Subtotal</th>
+                <th className="py-2 px-4 border-b text-center">Acción</th>
               </tr>
             </thead>
             <tbody>
-              {formData.productos.map((producto, index) => (
+              {formData.productos.map((product, index) => (
                 <tr key={index}>
-                  <td className="border-b px-4 py-2">
-                    <input
-                      type="text"
-                      value={producto.nombre}
-                      onChange={(e) =>
-                        handleEditProductRow(index, "nombre", e.target.value)
-                      }
-                      className="border border-gray-300 rounded px-2 py-1 w-full"
-                    />
-                  </td>
-                  <td className="border-b px-4 py-2">
-                    <input
-                      type="text"
-                      value={producto.descripcion}
-                      onChange={(e) =>
-                        handleEditProductRow(index, "descripcion", e.target.value)
-                      }
-                      className="border border-gray-300 rounded px-2 py-1 w-full"
-                    />
-                  </td>
-                  <td className="border-b px-4 py-2">
+                  <td className="py-2 px-4 border-b">{product.nombre}</td>
+                  <td className="py-2 px-4 border-b">{product.descripcion}</td>
+                  <td className="py-2 px-4 border-b">
                     <input
                       type="number"
-                      value={producto.cantidad}
-                      onChange={(e) =>
-                        handleEditProductRow(index, "cantidad", e.target.value)
-                      }
-                      className="border border-gray-300 rounded px-2 py-1 w-full"
                       min="1"
-                    />
-                  </td>
-                  <td className="border-b px-4 py-2">
-                    <input
-                      type="number"
-                      value={producto.precioUnitario}
+                      value={product.cantidad}
                       onChange={(e) =>
-                        handleEditProductRow(index, "precioUnitario", e.target.value)
+                        handleEditProductRow(
+                          index,
+                          "cantidad",
+                          parseFloat(e.target.value) || 1
+                        )
                       }
                       className="border border-gray-300 rounded px-2 py-1 w-full"
-                      step="0.01"
                     />
                   </td>
-                  <td className="border-b px-4 py-2">
-                    {producto.impuestos}
+                  <td className="py-2 px-4 border-b">
+                    {currencyFormatter.format(product.precio)}
                   </td>
-                  <td className="border-b px-4 py-2">
-                    {currencyFormatter.format(producto.impuestosNoIncluidos)}
+                  <td className="py-2 px-4 border-b">
+                    {currencyFormatter.format(
+                      product.impuestos * product.cantidad
+                    )}
                   </td>
-                  <td className="border-b px-4 py-2">
+                  <td className="py-2 px-4 border-b">
+                    {currencyFormatter.format(
+                      product.precio * product.cantidad
+                    )}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center">
                     <button
                       onClick={() => handleDeleteProductRow(index)}
-                      className="text-red-500"
+                      className="bg-red-500 text-white px-2 py-1 rounded"
                     >
                       Eliminar
                     </button>
@@ -313,27 +404,46 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
               ))}
             </tbody>
           </table>
-          <button
-            onClick={handleAddProductRow}
-            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            Agregar Producto
-          </button>
+          <div className="flex justify-end mt-4">
+            <div className="flex flex-col items-end">
+              <div className="flex items-center mb-2">
+                <span className="font-medium text-gray-700 mr-2">
+                  Base imponible:
+                </span>
+                <span className="font-bold">
+                  {currencyFormatter.format(
+                    formData.total - formData.total * 0.18
+                  )}
+                </span>
+              </div>
+              <div className="flex items-center mb-2">
+                <span className="font-medium text-gray-700 mr-2">IGV:</span>
+                <span className="font-bold">
+                  {currencyFormatter.format(formData.total * 0.18)}
+                </span>
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium text-gray-700 mr-2">Total:</span>
+                <span className="text-xl font-bold">
+                  {currencyFormatter.format(formData.total)}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Botones */}
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end gap-4 mt-4">
           <button
             onClick={onClose}
-            className="bg-gray-500 text-white py-2 px-4 rounded mr-2"
+            className="bg-gray-500 text-white px-4 py-2 rounded"
           >
             Cancelar
           </button>
           <button
             onClick={handleSubmit}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Guardar
+            Guardar Pedido
           </button>
         </div>
       </div>

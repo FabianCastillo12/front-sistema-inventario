@@ -15,7 +15,7 @@ export default function ProductsPage() {
     handleAddProduct,
     handleUpdateProduct,
     handleDeleteProduct,
-    categoria
+    categoria,
   } = useProducts();
 
   return (
@@ -36,7 +36,6 @@ export default function ProductsPage() {
           onEditProduct={(product) => {
             setEditingProduct(product);
             setIsAddModalOpen(true);
-
           }}
           categoria={categoria}
           onDeleteProduct={handleDeleteProduct}

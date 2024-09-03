@@ -4,15 +4,16 @@ const ProductModal = ({
   setIsEditModalOpen,
   formDataEdit,
   onUpdateProduct,
+  categoria,
 }) => {
   const [formData, setFormData] = useState({
     id: formDataEdit.id,
     nombre: formDataEdit.nombre,
     precio: formDataEdit.precio,
     categoria: formDataEdit.categoria.nombre,
-    cantidadStock: formDataEdit.catidadStock,
+    estado: formDataEdit.estado,
   });
-
+  console.log(formData);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -53,14 +54,19 @@ const ProductModal = ({
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Categoría</label>
-            <input
-              type="text"
+            <select
               name="categoria"
               value={formData.categoria}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               required
-            />
+            >
+              {categoria.map((categoria) => (
+                <option key={categoria.id} value={categoria.nombre}>
+                  {categoria.nombre}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex justify-end mb-4">
             <button

@@ -32,40 +32,54 @@ export function useUsers() {
   };
 
   const handleUpdateUser = async (updatedUser) => {
-    try {
-      const { id, ...userData } = updatedUser;
-      const res = await fetch(`http://localhost:3010/auth/${id}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${session.user.token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: `Se actualizará el usuario ${updatedUser.nombre}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, actualizar",
+      cancelButtonText: "Cancelar",
+    });
 
-      if (res.ok) {
-        await fetchUsers();
-        await Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Usuario actualizado",
-          showConfirmButton: false,
-          timer: 1500,
+    if (result.isConfirmed) {
+      try {
+        const { id, ...userData } = updatedUser;
+        const res = await fetch(`http://localhost:3010/auth/${id}`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session.user.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
         });
-        setIsEditModalOpen(false);
-      } else {
-        const errorData = await res.json();
-        await Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "Error al actualizar el usuario",
-          text: errorData.message,
-          showConfirmButton: true,
-        });
+  
+        if (res.ok) {
+          await fetchUsers();
+          await Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Usuario actualizado",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setIsEditModalOpen(false);
+        } else {
+          const errorData = await res.json();
+          await Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error al actualizar el usuario",
+            text: errorData.message,
+            showConfirmButton: true,
+          });
+        }
+      } catch (error) {
+        console.error("Error updating user:", error);
       }
-    } catch (error) {
-      console.error("Error updating user:", error);
     }
+    
   };
 
   const handleDeleteUser = async (userId) => {
