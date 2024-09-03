@@ -4,6 +4,8 @@ import ProductTable from "@/app/dashboard/products/components/productsTable";
 import { IoAdd } from "react-icons/io5";
 import ProductAddModal from "@/app/dashboard/products/components/addProduct";
 import { useProducts } from "@/hooks/useProducts";
+import Paginacion from "./components/Paginacion";
+import { productStores } from "@/stores/productoStores";
 
 export default function ProductsPage() {
   const {
@@ -17,6 +19,7 @@ export default function ProductsPage() {
     handleDeleteProduct,
     categoria,
   } = useProducts();
+ const {productPage}=productStores()
 
   return (
     <>
@@ -32,7 +35,7 @@ export default function ProductsPage() {
         </button>
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">Productos</h1>
         <ProductTable
-          products={products}
+          products={productPage}
           onEditProduct={(product) => {
             setEditingProduct(product);
             setIsAddModalOpen(true);
@@ -48,6 +51,7 @@ export default function ProductsPage() {
           onDeleteProduct={handleDeleteProduct}
           product={editingProduct}
         />
+        <Paginacion  products={products}/>
       </div>
     </>
   );
