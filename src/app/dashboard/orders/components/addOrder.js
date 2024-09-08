@@ -74,7 +74,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
 
   useEffect(() => {
     if (isOpen) {
-      const currentDate = new Date().toISOString().split("T")[0]; 
+      const currentDate = new Date().toISOString().split("T")[0];
       setFormData((prevFormData) => ({
         ...prevFormData,
         fecha: currentDate,
@@ -189,7 +189,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50">
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50 pt-20">
       <div
         className="bg-white p-6 rounded-lg shadow-lg max-w-[calc(90vw-4rem)] w-full overflow-y-auto max-h-[calc(80vh-4rem)] scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100"
         style={{ scrollbarWidth: "none" }}
@@ -542,6 +542,23 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
             </div>
           </>
         )}
+      </div>
+
+
+
+      <div className="flex justify-end gap-4 mt-4">
+        <button
+          onClick={() => setIsReviewing(true)} // Cambiar al paso de revisión
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Continuar
+        </button>
+        <button
+          onClick={onClose}
+          className="bg-gray-500 text-white px-4 py-2 rounded"
+        >
+          Cancelar
+        </button>
       </div>
     </div>
   );

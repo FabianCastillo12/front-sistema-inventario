@@ -3,7 +3,7 @@ import { useFormats } from "@/hooks/useFormats";
 import { useClientes } from "@/hooks/useClients";
 import { useProducts } from "@/hooks/useProducts";
 
-const OrderModal = ({ setIsEditModalOpen, formDataEdit, onUpdateOrder, onClose}) => {
+const OrderModal = ({ setIsEditModalOpen, formDataEdit, onUpdateOrder, onClose }) => {
   const { products } = useProducts();
   const { clientes } = useClientes();
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,9 +69,9 @@ const OrderModal = ({ setIsEditModalOpen, formDataEdit, onUpdateOrder, onClose})
     direccion: formDataEdit.cliente.direccion,
     productos: formDataEdit.detallePedidos.map((detalle) => {
       const producto = detalle.producto; // Producto dentro del detalle
-      
+
       const impuestos = producto.precio * 0.18;
-      
+
       const newProduct = {
         ...(detalle.id ? { idDetalle: detalle.id } : {}),
         id: producto.id,
@@ -83,7 +83,7 @@ const OrderModal = ({ setIsEditModalOpen, formDataEdit, onUpdateOrder, onClose})
         impuestos,
         impuestosNoIncluidos: impuestos,
       };
-  
+
       return newProduct;
     }),
     total: 0,
@@ -91,7 +91,7 @@ const OrderModal = ({ setIsEditModalOpen, formDataEdit, onUpdateOrder, onClose})
   console.log(formData, "formData");
   useEffect(() => {
     if (setIsEditModalOpen) {
-      const currentDate = new Date().toISOString().split("T")[0]; 
+      const currentDate = new Date().toISOString().split("T")[0];
       setFormData((prevFormData) => ({
         ...prevFormData,
         fecha: currentDate,
@@ -205,7 +205,7 @@ const OrderModal = ({ setIsEditModalOpen, formDataEdit, onUpdateOrder, onClose})
   if (!setIsEditModalOpen) return null;
 
   return (
-    (<div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50">
+    (<div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50 pt-20">
       <div
         className="bg-white p-6 rounded-lg shadow-lg max-w-[calc(90vw-4rem)] w-full overflow-y-auto max-h-[calc(80vh-4rem)] scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100"
         style={{ scrollbarWidth: "none" }}
@@ -450,20 +450,21 @@ const OrderModal = ({ setIsEditModalOpen, formDataEdit, onUpdateOrder, onClose})
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 mt-4">
-          <button
-            onClick={onClose}
-            className="bg-gray-500 text-white px-4 py-2 rounded"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Guardar Pedido
-          </button>
-        </div>
+
+      </div>
+      <div className="flex justify-end gap-4 mt-4">
+        <button
+          onClick={onClose}
+          className="bg-gray-500 text-white px-4 py-2 rounded"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Guardar Pedido
+        </button>
       </div>
     </div>)
   );
