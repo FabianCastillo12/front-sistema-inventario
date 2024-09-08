@@ -4,7 +4,7 @@ const StockList = ({ stock, onEdit }) => {
   return (
     <table className="min-w-full bg-white border-collapse text-black">
       <thead>
-        <tr className="bg-black text-white">
+        <tr className="bg-[#05023c] text-white">
           <th className="p-2 font-bold text-left">ID</th>
           <th className="p-2 font-bold text-left">Nombre</th>
           <th className="p-2 font-bold text-left">Cantidad</th>

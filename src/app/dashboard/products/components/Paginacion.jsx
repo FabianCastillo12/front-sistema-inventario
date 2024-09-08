@@ -67,7 +67,7 @@ export default function Paginacion({ products }) {
                             <div
                                 className={`cursor-pointer mx-1 flex h-9 w-9 items-center justify-center rounded-full p-0 text-sm ${
                                     currentPage === page
-                                        ? 'bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-md shadow-pink-500/20'
+                                        ? 'bg-gradient-to-tr from-green-600 to-green-400 text-white shadow-md shadow-green-500/20'
                                         : 'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-light-300'
                                 } transition duration-150 ease-in-out`}
                                 onClick={() => paginate(page)}

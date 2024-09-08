@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useClientes } from "@/hooks/useClients";
+import { useFormats } from "@/hooks/useFormats";
 
 const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
   const { products } = useProducts();
@@ -11,6 +12,8 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
   const [filteredClientes, setFilteredClientes] = useState([]);
   const [productSearchQuery, setProductSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const { currencyFormatter } = useFormats();
+  const [isReviewing, setIsReviewing] = useState(false); // Nuevo estado para el paso de detalles
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -71,18 +74,13 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
 
   useEffect(() => {
     if (isOpen) {
-      const currentDate = new Date().toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+      const currentDate = new Date().toISOString().split("T")[0]; 
       setFormData((prevFormData) => ({
         ...prevFormData,
         fecha: currentDate,
       }));
     }
   }, [isOpen]);
-
-  const currencyFormatter = new Intl.NumberFormat("es-PE", {
-    style: "currency",
-    currency: "PEN",
-  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -113,7 +111,9 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
     };
     console.log("orderData", orderData);
     onAddOrder(orderData);
-    setFormData({ clienteSeleccionadoId: "", productos: [] });
+    setFormData({ id: "", productos: [], total: 0 });
+    setIsReviewing(false); // Regresa al formulario después de guardar
+    onClose();
   };
 
   const handleEditProductRow = (index, field, value) => {
@@ -143,6 +143,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
       id: product.id,
       nombre: product.nombre,
       descripcion: product.categoria.descripcion,
+      stock: product.cantidadStock,
       cantidad: 1,
       precio: product.precio,
       impuestos: product.precio * 0.18,
@@ -166,7 +167,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
       telefono: cliente.telefono,
       direccion: cliente.direccion,
     });
-    setSearchQuery(""); // Clear search after selection
+    setSearchQuery("");
   };
 
   const calculateTotal = (productos) => {
@@ -193,259 +194,354 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
         className="bg-white p-6 rounded-lg shadow-lg max-w-[calc(90vw-4rem)] w-full overflow-y-auto max-h-[calc(80vh-4rem)] scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100"
         style={{ scrollbarWidth: "none" }}
       >
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-2xl font-semibold">Agregar Pedido</div>
-          <input
-            type="date"
-            name="fecha"
-            value={formData.fecha}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-2 py-1"
-            placeholder="Ingresa la fecha"
-          />
-        </div>
-        <div className="py-4 border-b pb-4">
-          <div className="font-medium mb-2">Buscar Cliente:</div>
-          <div className="flex mb-2 gap-20">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="border border-gray-300 rounded px-2 py-1 w-full"
-              placeholder="Buscar"
-            />
-            <select
-              value={searchCriteria}
-              onChange={(e) => setSearchCriteria(e.target.value)}
-              className="border border-gray-300 rounded px-2 py-1 w-1/3 mr-2"
-            >
-              <option value="nombre">Nombre</option>
-              <option value="dni">DNI</option>
-              <option value="ruc">RUC</option>
-            </select>
-          </div>
-          {searchQuery.trim() && filteredClientes.length > 0 && (
-            <div className="border border-gray-300 rounded mt-2 max-h-48 overflow-y-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-                <thead className="bg-[#05023c] text-white">
-                  <tr>
-                    <th className="py-2 px-4 border-b text-center">Nombre</th>
-                    <th className="py-2 px-4 border-b text-center">DNI</th>
-                    <th className="py-2 px-4 border-b text-center">RUC</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredClientes.map((cliente) => (
-                    <tr
-                      key={cliente.id}
-                      onClick={() => handleClientSelect(cliente)}
-                      className="cursor-pointer hover:bg-gray-100 text-center"
-                    >
-                      <td className="py-2 px-4 border-b">{cliente.nombre}</td>
-                      <td className="py-2 px-4 border-b">{cliente.dni}</td>
-                      <td className="py-2 px-4 border-b">{cliente.ruc}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {!isReviewing ? (
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-2xl font-semibold">Agregar Pedido</div>
+              <input
+                type="date"
+                name="fecha"
+                value={formData.fecha}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1"
+                placeholder="Ingresa la fecha"
+              />
             </div>
-          )}
-        </div>
-        <div className="py-4">
-          <div className="font-medium mb-2">Nombre:</div>
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-2 py-1 w-full"
-            placeholder="Nombre del cliente"
-            disabled
-          />
-          <div className="font-medium mb-2 mt-2">Email:</div>
-          <input
-            type="text"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-2 py-1 w-full"
-            placeholder="Email del cliente"
-            disabled
-          />
-          <div className="font-medium mb-2 mt-2">Teléfono:</div>
-          <input
-            type="text"
-            name="telefono"
-            value={formData.telefono}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-2 py-1 w-full"
-            placeholder="Teléfono del cliente"
-            disabled
-          />
-          <div className="font-medium mb-2 mt-2">Dirección:</div>
-          <input
-            type="text"
-            name="direccion"
-            value={formData.direccion}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-2 py-1 w-full"
-            placeholder="Dirección del cliente"
-            disabled
-          />
-        </div>
+            <div className="py-4 border-b pb-4">
+              <div className="font-medium mb-2">Buscar Cliente:</div>
+              <div className="flex mb-2 gap-20">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1 w-full"
+                  placeholder="Buscar"
+                />
+                <select
+                  value={searchCriteria}
+                  onChange={(e) => setSearchCriteria(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1 w-1/3 mr-2"
+                >
+                  <option value="nombre">Nombre</option>
+                  <option value="dni">DNI</option>
+                  <option value="ruc">RUC</option>
+                </select>
+              </div>
+              {searchQuery.trim() && filteredClientes.length > 0 && (
+                <div className="border border-gray-300 rounded mt-2 max-h-48 overflow-y-auto">
+                  <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                    <thead className="bg-[#05023c] text-white">
+                      <tr>
+                        <th className="py-2 px-4 border-b text-center">Nombre</th>
+                        <th className="py-2 px-4 border-b text-center">DNI</th>
+                        <th className="py-2 px-4 border-b text-center">RUC</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredClientes.map((cliente) => (
+                        <tr
+                          key={cliente.id}
+                          onClick={() => handleClientSelect(cliente)}
+                          className="cursor-pointer hover:bg-gray-100 text-center"
+                        >
+                          <td className="py-2 px-4 border-b">{cliente.nombre}</td>
+                          <td className="py-2 px-4 border-b">{cliente.dni}</td>
+                          <td className="py-2 px-4 border-b">{cliente.ruc}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+            <div className="py-4">
+              <div className="font-medium mb-2">Nombre:</div>
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                placeholder="Nombre del cliente"
+                disabled
+              />
+              <div className="font-medium mb-2 mt-2">Email:</div>
+              <input
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                placeholder="Email del cliente"
+                disabled
+              />
+              <div className="font-medium mb-2 mt-2">Teléfono:</div>
+              <input
+                type="text"
+                name="telefono"
+                value={formData.telefono}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                placeholder="Teléfono del cliente"
+                disabled
+              />
+              <div className="font-medium mb-2 mt-2">Dirección:</div>
+              <input
+                type="text"
+                name="direccion"
+                value={formData.direccion}
+                onChange={handleChange}
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                placeholder="Dirección del cliente"
+                disabled
+              />
+            </div>
 
-        <div className="py-4 border-t pt-4">
-          <div className="font-medium mb-2">Buscar Producto:</div>
-          <div className="flex mb-2 gap-20">
-            <input
-              type="text"
-              value={productSearchQuery}
-              onChange={(e) => setProductSearchQuery(e.target.value)}
-              className="border border-gray-300 rounded px-2 py-1 w-full"
-              placeholder="Buscar productos"
-            />
-          </div>
-          {productSearchQuery.trim() && filteredProducts.length > 0 && (
-            <div className="border border-gray-300 rounded mt-2 max-h-48 overflow-y-auto">
+            <div className="py-4 border-t pt-4">
+              <div className="font-medium mb-2">Buscar Producto:</div>
+              <div className="flex mb-2 gap-20">
+                <input
+                  type="text"
+                  value={productSearchQuery}
+                  onChange={(e) => setProductSearchQuery(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1 w-full"
+                  placeholder="Buscar productos"
+                />
+              </div>
+              {productSearchQuery.trim() && filteredProducts.length > 0 && (
+                <div className="border border-gray-300 rounded mt-2 max-h-48 overflow-y-auto">
+                  <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                    <thead className="bg-[#05023c] text-white">
+                      <tr>
+                        <th className="py-2 px-4 border-b text-center">Nombre</th>
+                        <th className="py-2 px-4 border-b text-center">
+                          Descripción
+                        </th>
+                        <th className="py-2 px-4 border-b text-center">Precio</th>
+                        <th className="py-2 px-4 border-b text-center">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredProducts.map((product) => (
+                        <tr
+                          key={product.id}
+                          onClick={() => handleAddProductRow(product)}
+                          className="cursor-pointer hover:bg-gray-100 text-center"
+                        >
+                          <td className="py-2 px-4 border-b">{product.nombre}</td>
+                          <td className="py-2 px-4 border-b">
+                            {product.descripcion}
+                          </td>
+                          <td className="py-2 px-4 border-b">
+                            {currencyFormatter.format(product.precio)}
+                          </td>
+                          <td className="py-2 px-4 border-b">
+                            <button className="bg-blue-500 text-white px-2 py-1 rounded">
+                              Agregar
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            <div className="py-4">
+              <div className="font-medium mb-2">Productos Añadidos:</div>
               <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead className="bg-[#05023c] text-white">
                   <tr>
                     <th className="py-2 px-4 border-b text-center">Nombre</th>
-                    <th className="py-2 px-4 border-b text-center">
-                      Descripción
-                    </th>
+                    <th className="py-2 px-4 border-b text-center">Descripción</th>
+                    <th className="py-2 px-4 border-b text-center">Cantidad</th>
+                    <th className="py-2 px-4 border-b text-center">Stock</th>
                     <th className="py-2 px-4 border-b text-center">Precio</th>
+                    <th className="py-2 px-4 border-b text-center">Impuestos</th>
+                    <th className="py-2 px-4 border-b text-center">Subtotal</th>
                     <th className="py-2 px-4 border-b text-center">Acción</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts.map((product) => (
-                    <tr
-                      key={product.id}
-                      onClick={() => handleAddProductRow(product)}
-                      className="cursor-pointer hover:bg-gray-100 text-center"
-                    >
+                  {formData.productos.map((product, index) => (
+                    <tr key={index}>
                       <td className="py-2 px-4 border-b">{product.nombre}</td>
+                      <td className="py-2 px-4 border-b">{product.descripcion}</td>
                       <td className="py-2 px-4 border-b">
-                        {product.descripcion}
+                        <input
+                          type="number"
+                          min="1"
+                          max={product.stock}
+                          value={product.cantidad}
+                          onChange={(e) =>
+                            handleEditProductRow(
+                              index,
+                              "cantidad",
+                              Math.min(parseFloat(e.target.value) || 1, product.stock)
+                            )
+                          }
+                          className="border border-gray-300 rounded px-2 py-1 w-full"
+                        />
                       </td>
+                      <td className="py-2 px-4 border-b">{product.stock}</td>
                       <td className="py-2 px-4 border-b">
                         {currencyFormatter.format(product.precio)}
                       </td>
                       <td className="py-2 px-4 border-b">
-                        <button className="bg-blue-500 text-white px-2 py-1 rounded">
-                          Agregar
+                        {currencyFormatter.format(
+                          product.impuestos * product.cantidad
+                        )}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        {currencyFormatter.format(
+                          product.precio * product.cantidad
+                        )}
+                      </td>
+                      <td className="py-2 px-4 border-b text-center">
+                        <button
+                          onClick={() => handleDeleteProductRow(index)}
+                          className="bg-red-500 text-white px-2 py-1 rounded"
+                        >
+                          Eliminar
                         </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-          )}
-        </div>
-
-        <div className="py-4">
-          <div className="font-medium mb-2">Productos Añadidos:</div>
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-[#05023c] text-white">
-              <tr>
-                <th className="py-2 px-4 border-b text-center">Nombre</th>
-                <th className="py-2 px-4 border-b text-center">Descripción</th>
-                <th className="py-2 px-4 border-b text-center">Cantidad</th>
-                <th className="py-2 px-4 border-b text-center">Precio</th>
-                <th className="py-2 px-4 border-b text-center">Impuestos</th>
-                <th className="py-2 px-4 border-b text-center">Subtotal</th>
-                <th className="py-2 px-4 border-b text-center">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {formData.productos.map((product, index) => (
-                <tr key={index}>
-                  <td className="py-2 px-4 border-b">{product.nombre}</td>
-                  <td className="py-2 px-4 border-b">{product.descripcion}</td>
-                  <td className="py-2 px-4 border-b">
-                    <input
-                      type="number"
-                      min="1"
-                      value={product.cantidad}
-                      onChange={(e) =>
-                        handleEditProductRow(
-                          index,
-                          "cantidad",
-                          parseFloat(e.target.value) || 1
-                        )
-                      }
-                      className="border border-gray-300 rounded px-2 py-1 w-full"
-                    />
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {currencyFormatter.format(product.precio)}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {currencyFormatter.format(
-                      product.impuestos * product.cantidad
-                    )}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {currencyFormatter.format(
-                      product.precio * product.cantidad
-                    )}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    <button
-                      onClick={() => handleDeleteProductRow(index)}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="flex justify-end mt-4">
-            <div className="flex flex-col items-end">
-              <div className="flex items-center mb-2">
-                <span className="font-medium text-gray-700 mr-2">
-                  Base imponible:
-                </span>
-                <span className="font-bold">
-                  {currencyFormatter.format(
-                    formData.total - formData.total * 0.18
-                  )}
-                </span>
-              </div>
-              <div className="flex items-center mb-2">
-                <span className="font-medium text-gray-700 mr-2">IGV:</span>
-                <span className="font-bold">
-                  {currencyFormatter.format(formData.total * 0.18)}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <span className="font-medium text-gray-700 mr-2">Total:</span>
-                <span className="text-xl font-bold">
-                  {currencyFormatter.format(formData.total)}
-                </span>
+              <div className="flex justify-end mt-4">
+                <div className="flex flex-col items-end">
+                  <div className="flex items-center mb-2">
+                    <span className="font-medium text-gray-700 mr-2">
+                      Base imponible:
+                    </span>
+                    <span className="font-bold">
+                      {currencyFormatter.format(
+                        formData.total - formData.total * 0.18
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex items-center mb-2">
+                    <span className="font-medium text-gray-700 mr-2">IGV:</span>
+                    <span className="font-bold">
+                      {currencyFormatter.format(formData.total * 0.18)}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="font-medium text-gray-700 mr-2">Total:</span>
+                    <span className="text-xl font-bold">
+                      {currencyFormatter.format(formData.total)}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="flex justify-end gap-4 mt-4">
-          <button
-            onClick={onClose}
-            className="bg-gray-500 text-white px-4 py-2 rounded"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Guardar Pedido
-          </button>
-        </div>
+            <div className="flex justify-end gap-4 mt-4">
+              <button
+                onClick={() => setIsReviewing(true)} // Cambiar al paso de revisión
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Continuar
+              </button>
+              <button
+                onClick={onClose}
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Cancelar
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="text-2xl font-semibold mb-4">Confirmar Pedido</div>
+            <div className="py-4 border-b pb-4">
+              <div className="font-medium mb-2">Cliente:</div>
+              <div>{formData.nombre}</div>
+              <div>{formData.email}</div>
+              <div>{formData.telefono}</div>
+              <div>{formData.direccion}</div>
+            </div>
+            <div className="py-4 border-t pt-4">
+              <div className="font-medium mb-2">Productos Añadidos:</div>
+              <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <thead className="bg-[#05023c] text-white">
+                  <tr>
+                    <th className="py-2 px-4 border-b text-center">Nombre</th>
+                    <th className="py-2 px-4 border-b text-center">Descripción</th>
+                    <th className="py-2 px-4 border-b text-center">Cantidad</th>
+                    <th className="py-2 px-4 border-b text-center">Precio</th>
+                    <th className="py-2 px-4 border-b text-center">Impuestos</th>
+                    <th className="py-2 px-4 border-b text-center">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {formData.productos.map((product, index) => (
+                    <tr key={index}>
+                      <td className="py-2 px-4 border-b">{product.nombre}</td>
+                      <td className="py-2 px-4 border-b">{product.descripcion}</td>
+                      <td className="py-2 px-4 border-b">{product.cantidad}</td>
+                      <td className="py-2 px-4 border-b">
+                        {currencyFormatter.format(product.precio)}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        {currencyFormatter.format(
+                          product.impuestos * product.cantidad
+                        )}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        {currencyFormatter.format(
+                          product.precio * product.cantidad
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end mt-4">
+                <div className="flex flex-col items-end">
+                  <div className="flex items-center mb-2">
+                    <span className="font-medium text-gray-700 mr-2">
+                      Base imponible:
+                    </span>
+                    <span className="font-bold">
+                      {currencyFormatter.format(
+                        formData.total - formData.total * 0.18
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex items-center mb-2">
+                    <span className="font-medium text-gray-700 mr-2">IGV:</span>
+                    <span className="font-bold">
+                      {currencyFormatter.format(formData.total * 0.18)}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="font-medium text-gray-700 mr-2">Total:</span>
+                    <span className="text-xl font-bold">
+                      {currencyFormatter.format(formData.total)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-4 mt-4">
+              <button
+                onClick={handleSubmit}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Confirmar Pedido
+              </button>
+              <button
+                onClick={() => setIsReviewing(false)} // Regresar al paso anterior
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Volver
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

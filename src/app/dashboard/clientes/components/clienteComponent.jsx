@@ -4,21 +4,21 @@ export default function ClienteComponent({ clientes, onEditCliente, onDeleteClie
   return (
     <>
       <table className="min-w-full bg-white border-collapse block md:table">
-        <thead className="block md:table-header-group">
+        <thead className="block md:table-header-group ">
           <tr className="border border-grey-500 md:border-none block md:table-row">
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
               Nombre
             </th>
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
               Email
             </th>
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
               Teléfono 
             </th>
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
               Dirección 
             </th>
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
               Acciones
             </th>
           </tr>

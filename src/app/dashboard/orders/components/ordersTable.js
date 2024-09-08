@@ -3,10 +3,11 @@ import OrderModal from "@/app/dashboard/orders/components/editOrder";
 import { useStore } from "@/stores/autenticacion";
 import { useSession } from "next-auth/react";
 import ViewOrderModal from "@/app/dashboard/orders/components/viewOrder";
+import { useFormats } from "@/hooks/useFormats";
 
-const OrdersTable = ({ orders, onDeleteOrder }) => {
+const OrdersTable = ({ orders, onDeleteOrder, onUpdateOrder }) => {
   console.log(orders);
-  
+  const { formatearFechaISO, currencyFormatter } = useFormats();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [formDataEdit, setFormDataEdit] = useState(null);
 
@@ -51,9 +52,9 @@ const OrdersTable = ({ orders, onDeleteOrder }) => {
           {orderList.map((order) => (
             <tr key={order.id}>
               <td className="py-2 px-4 border-b">{order.id}</td>
-              <td className="py-2 px-4 border-b">{order.fecha_pedido}</td>
+              <td className="py-2 px-4 border-b">{formatearFechaISO(order.fecha_pedido)}</td>
               <td className="py-2 px-4 border-b">{order.cliente.nombre}</td>
-              <td className="py-2 px-4 border-b">{order.total}</td>
+              <td className="py-2 px-4 border-b">{currencyFormatter.format(order.total)}</td>
               <td className="py-2 px-4 border-b">{order.estado}</td>
               <td className="py-2 px-4 border-b">
                 <button
@@ -91,6 +92,8 @@ const OrdersTable = ({ orders, onDeleteOrder }) => {
         <OrderModal
           setIsEditModalOpen={setIsEditModalOpen}
           formDataEdit={formDataEdit}
+          onUpdateOrder={onUpdateOrder}
+          onClose={() => setIsEditModalOpen(false)}   
         />
       )}
       {isViewModalOpen && (

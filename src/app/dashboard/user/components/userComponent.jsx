@@ -8,16 +8,16 @@ export default function UserComponent({ users, onEditUser, onDeleteUser }) {
       <table className="min-w-full bg-white border-collapse block md:table">
         <thead className="block md:table-header-group">
           <tr className="border border-grey-500 md:border-none block md:table-row">
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
               Nombre
             </th>
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
               Email
             </th>
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell text-center">
               Rol
             </th>
-            <th className="bg-black p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-center block md:table-cell">
               Acciones
             </th>
           </tr>
@@ -35,10 +35,10 @@ export default function UserComponent({ users, onEditUser, onDeleteUser }) {
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   {user.email}
                 </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                <td className="p-2 md:border md:border-grey-500 block md:table-cell text-center">
                   {user.role}
                 </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                <td className="p-2 md:border md:border-grey-500 block md:table-cell text-center">
                   <button
                     onClick={() => onEditUser(user)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 border border-blue-500 rounded mr-1"

@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { usePedidos } from "@/hooks/usePedidos"
 
 export default function OrdersPage() {
-  const { pedidos, handleAddOrder, handleDeleteOrder } = usePedidos();
+  const { pedidos, handleAddOrder, handleDeleteOrder, handleUpdateOrder } = usePedidos();
   console.log(pedidos);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -18,56 +18,10 @@ export default function OrdersPage() {
   const user = useStore((state) => state.user);
   const { data: session, status } = useSession();
 
-  const handleUpdateOrder = async (formData) => {
-    // **COMENTADO POR AHORA - IMPLEMENTAR MÁS ADELANTE**
-    // try {
-    //   const res = await fetch(`http://localhost:3010/orders/${formData.id}`, { // Endpoint a modificar
-    //     method: "PATCH",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${session.user.token}`,
-    //     },
-    //     body: JSON.stringify(formData), 
-    //   });
-    //   const data = await res.json();
-    //   console.log(data);
-
-    //   if (res.ok) {
-    //     await traerOrders(); 
-    //     await Swal.fire({
-    //       position: "center",
-    //       icon: "success",
-    //       title: "Order actualizado",
-    //       showConfirmButton: false,
-    //       timer: 1500,
-    //     });
-    //   } else {
-    //     console.error("Error al modificar el Order:", data.message);
-    //     await Swal.fire({
-    //       position: "center",
-    //       icon: "error",
-    //       title: "Error al actualizar el Order",
-    //       showConfirmButton: true,
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-
   const handleEditOrder = (order) => {
     setEditingOrder(order);
     setIsAddModalOpen(true);
   };
-
-
-
-// Función para manejar el botón "Ver" (por ahora vacía)
-
-const handleViewOrder = (order) => {
-  // Implementaremos la lógica aquí más adelante para pedidos
-};
-
 
   return (
     <>
@@ -84,17 +38,14 @@ const handleViewOrder = (order) => {
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">Pedidos</h1>
         <OrdersTable
           orders={pedidos} 
-          onEditOrder={handleEditOrder}
+          onEditOrder={handleUpdateOrder}
           onDeleteOrder={handleDeleteOrder}
           onUpdateOrder={handleUpdateOrder} 
-          onViewOrder={handleViewOrder} 
         />
         <OrderAddModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onAddOrder={handleAddOrder} 
-          onDeleteOrder={handleDeleteOrder} 
-          order={editingOrder} 
         />
       </div>
     </>

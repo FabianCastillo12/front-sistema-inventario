@@ -1,6 +1,8 @@
 import React from "react";
+import { useFormats } from "@/hooks/useFormats";
 
 const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
+  const { formatearFechaISO, currencyFormatter } = useFormats();
   const formData = {
     id: formDataView.id,
     fecha: formatearFechaISO(formDataView.fecha_pedido),
@@ -13,23 +15,6 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
     estado: formDataView.estado,
   };
 
-  const currencyFormatter = new Intl.NumberFormat("es-PE", {
-    style: "currency",
-    currency: "PEN",
-  });
-
-  function formatearFechaISO(fechaISO) {
-    const fecha = new Date(fechaISO);
-  
-    const dia = fecha.getDate().toString().padStart(2, '0');
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-    const anio = fecha.getFullYear();
-    const horas = fecha.getHours().toString().padStart(2, '0');
-    const minutos = fecha.getMinutes().toString().padStart(2, '0');
-    const segundos = fecha.getSeconds().toString().padStart(2, '0');
-  
-    return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
-  }
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50">
       <div
@@ -156,32 +141,14 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
         </div>
         <div className="pt-4 mt-4 border-t border-gray-200">
           <div className="flex justify-between mb-4">
-            <div className="flex">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded mr-2">
-                Escribir una nota
-              </button>
-            </div>
-            <div className="flex">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded mr-2">
-                Enviar por correo electrónico
-              </button>
-            </div>
-          </div>
-
-          <div className="flex justify-between mb-4">
             <div className="flex"></div>
             <div className="flex"></div>
           </div>
-          <div className="flex justify-between mb-4">
-            <div className="flex">
-              <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mr-2">
-                W
-              </div>
-              <span className="font-medium">
-                {formData.cliente} - hace 2 minutos
-              </span>
-            </div>
-            <div className="flex">
+          <div className="flex justify-end mb-4">
+            <div className="flex gap-5">
+              <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                Descargar
+              </button>
               <button
                 onClick={() => setIsViewModalOpen(false)}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded"

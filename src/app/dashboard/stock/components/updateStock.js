@@ -28,6 +28,13 @@ const UpdateStockModal = ({ isOpen, onClose, product, onUpdateStock }) => {
 
     try {
       await onUpdateStock(product.id, Number(stock)); // Asegúrate de convertir stock a número
+      await Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Stock actualizado",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       console.log("Stock updated successfully");
       onClose();
     } catch (error) {

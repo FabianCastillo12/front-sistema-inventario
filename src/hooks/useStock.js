@@ -53,13 +53,6 @@ export function useStock() {
               : product
           )
         );
-        await Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Stock actualizado",
-          showConfirmButton: false,
-          timer: 1500,
-        });
       } else {
         const data = await res.json();
         console.error("Error updating stock:", data.message);
