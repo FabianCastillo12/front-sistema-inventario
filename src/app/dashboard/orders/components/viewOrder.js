@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { useFormats } from "@/hooks/useFormats";
-import PdfGenerator from "@/app/dashboard/orders/components/PdfGenerator"; // Ruta de PdfGenerator
+import PdfGenerator from "@/app/dashboard/orders/components/PdfGenerator";
 
 const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
   const { formatearFechaISO, currencyFormatter } = useFormats();
-  const orderRef = useRef(); // Añadimos la referencia aquí
-  const [isGenerating, setIsGenerating] = useState(false); // Estado para controlar la generación del PDF
+  const orderRef = useRef();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const formData = {
     id: formDataView.id,
@@ -19,15 +19,15 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
     estado: formDataView.estado,
   };
 
+  const nombrePedido = `Fact${formData.id}_${formData.cliente}_${formData.fecha}.pdf`;
+
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50 pt-20">
-      {/* Aquí envolvemos todo el contenido que se capturará en el PDF */}
       <div
-        ref={orderRef} // Usamos la referencia aquí para capturar solo este div
+        ref={orderRef}
         className="bg-white p-6 rounded-lg shadow-lg max-w-[calc(90vw-4rem)] w-full overflow-y-auto max-h-[calc(78vh-4rem)] scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100"
         style={{ scrollbarWidth: "none" }}
       >
-        {/* Encabezado */}
         <div className="flex items-center justify-between border-b pb-4">
           <div className="flex items-center">
             <i className="fas fa-bars mr-2"></i>
@@ -52,7 +52,6 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
           </div>
         </div>
 
-        {/* Información del Cliente */}
         <div className="py-4">
           <div className="font-medium mb-2">Cliente:</div>
           <span className="font-bold">{formData.cliente}</span>
@@ -70,14 +69,12 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
           <span className="font-bold">{formData.direccion}</span>
         </div>
 
-        {/* Pestañas */}
         <div className="flex border-b mb-4">
           <div className="px-4 py-2 cursor-pointer border-b-2 border-blue-500 text-blue-500 font-medium">
             Líneas del pedido
           </div>
         </div>
 
-        {/* Detalles del pedido */}
         <div className="p-4 border-t border-gray-200">
           <h3 className="text-lg font-medium mb-4">Productos</h3>
           <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
@@ -87,7 +84,9 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
                 <th className="py-2 px-4 border-b text-white">Nombre</th>
                 <th className="py-2 px-4 border-b text-white">Descripción</th>
                 <th className="py-2 px-4 border-b text-white">Cantidad</th>
-                <th className="py-2 px-4 border-b text-white">Precio Unitario</th>
+                <th className="py-2 px-4 border-b text-white">
+                  Precio Unitario
+                </th>
                 <th className="py-2 px-4 border-b text-white">Impuestos</th>
                 <th className="py-2 px-4 border-b text-white">Subtotal</th>
               </tr>
@@ -107,7 +106,9 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
                     {currencyFormatter.format(detalle.producto.precio)}
                   </td>
                   <td className="py-2 px-4 border-b">
-                    {currencyFormatter.format(detalle.producto.precio * 0.18 * detalle.cantidad)}
+                    {currencyFormatter.format(
+                      detalle.producto.precio * 0.18 * detalle.cantidad
+                    )}
                   </td>
                   <td className="py-2 px-4 border-b">
                     {currencyFormatter.format(detalle.subTotal)}
@@ -125,7 +126,9 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
                 Base imponible:
               </span>
               <span className="font-bold">
-                {currencyFormatter.format(formData.total - formData.total * 0.18)}
+                {currencyFormatter.format(
+                  formData.total - formData.total * 0.18
+                )}
               </span>
             </div>
             <div className="flex items-center mb-2">
@@ -144,12 +147,11 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
         </div>
       </div>
 
-      {/* Aquí están los botones que no quieres capturar en el PDF */}
-      <div className="pt-4 mt-4 border-t border-gray-200 flex justify-end gap-5"> {/* Modificar disposición de los botones */}
+      <div className="pt-4 mt-4 border-t border-gray-200 flex justify-end gap-5">
         <div className="flex justify-end mb-4">
           <PdfGenerator
-            contentRef={orderRef} // Solo captura el div que contiene el pedido
-            filename="factura_pedido.pdf"
+            contentRef={orderRef}
+            filename={nombrePedido}
             setIsGenerating={setIsGenerating}
           />
         </div>

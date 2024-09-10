@@ -1,27 +1,77 @@
 import React, { useState, useEffect } from "react";
 
-export default function UpdateClienteModal({ // Nombre adaptado
+export default function UpdateClienteModal({ 
   cliente, 
   isOpen,
   onClose,
   onUpdateCliente
 }) {
   const [formData, setFormData] = useState({ ...cliente });
-
+  const [errors, setErrors] = useState({ dni: '' });
   useEffect(() => {
     setFormData({ ...cliente });
   }, [cliente]);
 
+  const validateDNI = (dni) => {
+    const dniPattern = /^\d{8}$/;
+    return dniPattern.test(dni);
+  };
+
+  const validateRUC = (ruc) => {
+    const rucPattern = /^(10|20)\d{9}$/;
+    return rucPattern.test(ruc);
+  };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    if (name === 'dni') {
+      if (!validateDNI(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          dni: 'El DNI debe tener 8 dígitos numéricos.',
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          dni: '',
+        }));
+      }
+    }
+    if (name === 'ruc') {
+      if (!validateRUC(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ruc: 'Formato de RUC incorrecto. Se espera 11 dígitos numéricos, empezando con 10 o 20.',
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ruc: '',
+        }));
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validateDNI(formData.dni)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        dni: 'El DNI debe tener 8 dígitos numéricos.',
+      }));
+      return;
+    }
+    if (!validateRUC(formData.ruc)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ruc: 'Formato de RUC incorrecto.',
+      }));
+      return;
+    }
     console.log("Cliente actualizado:", formData); 
     onUpdateCliente(formData); 
     onClose();
@@ -77,6 +127,30 @@ export default function UpdateClienteModal({ // Nombre adaptado
               className="w-full border border-gray-300 rounded p-2"
               required
             />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">DNI</label> {/* Nuevo campo */}
+            <input
+              type="text"
+              name="dni"
+              value={formData.dni}
+              onChange={handleChange}
+              className={`w-full border ${errors.dni ? 'border-red-500' : 'border-gray-300'} rounded p-2`}
+              required
+            />
+            {errors.dni && <p className="text-red-500 text-xs mt-1">{errors.dni}</p>}
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">RUC</label> 
+            <input
+              type="text"
+              name="ruc"
+              value={formData.ruc}
+              onChange={handleChange}
+              className={`w-full border ${errors.ruc ? 'border-red-500' : 'border-gray-300'} rounded p-2`}
+              required
+            />
+            {errors.ruc && <p className="text-red-500 text-xs mt-1">{errors.ruc}</p>}
           </div>
           <div className="flex justify-end space-x-4">
             <button

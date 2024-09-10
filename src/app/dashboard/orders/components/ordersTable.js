@@ -63,14 +63,14 @@ const OrdersTable = ({ orders, onDeleteOrder, onUpdateOrder }) => {
                 >
                   Ver
                 </button>
-
+                {/* 
                 <button
                   onClick={() => editOrder(true, order)}
                   className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600"
                 >
                   Modificar
                 </button>
-
+                  */}
                 {session &&
                   session.user &&
                   session.user.rol ===

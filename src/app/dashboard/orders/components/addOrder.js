@@ -170,6 +170,18 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
     setSearchQuery("");
   };
 
+  const handleClose = () => {
+    setFormData({id: "",
+      fecha: "",
+      cliente: "",
+      email: "",
+      telefono: "",
+      direccion: "",
+      productos: [],
+      total: 0,});
+    onClose();
+  };
+  
   const calculateTotal = (productos) => {
     const total = productos.reduce((acc, product) => {
       return acc + product.precio * product.cantidad;
@@ -446,7 +458,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
                 Continuar
               </button>
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="bg-gray-500 text-white px-4 py-2 rounded"
               >
                 Cancelar
@@ -542,23 +554,6 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
             </div>
           </>
         )}
-      </div>
-
-
-
-      <div className="flex justify-end gap-4 mt-4">
-        <button
-          onClick={() => setIsReviewing(true)} // Cambiar al paso de revisión
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Continuar
-        </button>
-        <button
-          onClick={onClose}
-          className="bg-gray-500 text-white px-4 py-2 rounded"
-        >
-          Cancelar
-        </button>
       </div>
     </div>
   );

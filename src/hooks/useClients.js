@@ -46,7 +46,7 @@ export function useClientes() {
         },
         body: JSON.stringify(clienteData),
       });
-
+      console.log("Cliente actualizado:", updatedCliente);
       if (res.ok) {
         await fetchClientes();
         await Swal.fire({
@@ -170,6 +170,7 @@ export function useClientes() {
     isAddModalOpen,
     openEditModal: (cliente) => {
       setSelectedCliente(cliente);
+      console.log("cliente", cliente);
       setIsEditModalOpen(true);
     },
     closeEditModal: () => {
