@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const ProductModal = ({
+  products,
   setIsEditModalOpen,
   formDataEdit,
   onUpdateProduct,
@@ -13,17 +14,84 @@ const ProductModal = ({
     categoria: formDataEdit.categoria.nombre,
     estado: formDataEdit.estado,
   });
-  console.log(formData);
+
+  const [errors, setErrors] = useState({
+    nombre: "",
+    precio: "",
+    categoria: "",
+  });
+
+  const validateNombre = (nombre) => /^[a-zA-Z0-9\s\(\)]{1,50}$/.test(nombre);
+  const validatePrecio = (precio) => /^\d+(\.\d{1,2})?$/.test(precio);
+  const validateCategoria = (categoria) => categoria !== "";
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // Validate fields
+    switch (name) {
+      case "nombre":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          nombre: validateNombre(value) ? "" : "El nombre debe contener solo letras, números y espacios.",
+        }));
+        break;
+      case "precio":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          precio: validatePrecio(value) ? "" : "El precio debe ser un número válido con hasta dos decimales.",
+        }));
+        break;
+      case "categoria":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          categoria: validateCategoria(value) ? "" : "Selecciona una categoría válida.",
+        }));
+        break;
+      default:
+        break;
+    }
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {
+      nombre: validateNombre(formData.nombre) ? "" : "El nombre debe contener solo letras, números y espacios.",
+      precio: validatePrecio(formData.precio) ? "" : "El precio debe ser un número válido con hasta dos decimales.",
+      categoria: validateCategoria(formData.categoria) ? "" : "Selecciona una categoría válida.",
+    };
+
+    setErrors(newErrors);
+    const hasErrors = Object.values(newErrors).some((error) => error);
+    if (hasErrors) return;
+
+    // Check if product with the same name already exists
+    const productExists = products.some(p => p.nombre === formData.nombre && p.id !== formData.id);
+    if (productExists) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        nombre: "Ya existe un producto con este nombre.",
+      }));
+      return;
+    }
+
     onUpdateProduct(formData);
     setIsEditModalOpen(false);
   };
+
+  useEffect(() => {
+    setFormData({
+      id: formDataEdit.id,
+      nombre: formDataEdit.nombre,
+      precio: formDataEdit.precio,
+      categoria: formDataEdit.categoria.nombre,
+      estado: formDataEdit.estado,
+    });
+  }, [formDataEdit]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black">
@@ -37,20 +105,23 @@ const ProductModal = ({
               name="nombre"
               value={formData.nombre}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`mt-1 block w-full border ${errors.nombre ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
               required
             />
+            {errors.nombre && <p className="text-red-500 text-sm">{errors.nombre}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Precio</label>
             <input
               type="number"
+              step="0.01"
               name="precio"
               value={formData.precio}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`mt-1 block w-full border ${errors.precio ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
               required
             />
+            {errors.precio && <p className="text-red-500 text-sm">{errors.precio}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Categoría</label>
@@ -58,15 +129,17 @@ const ProductModal = ({
               name="categoria"
               value={formData.categoria}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`mt-1 block w-full border ${errors.categoria ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
               required
             >
-              {categoria.map((categoria) => (
-                <option key={categoria.id} value={categoria.nombre}>
-                  {categoria.nombre}
+              <option value="">Selecciona una categoría</option>
+              {categoria.map((cat) => (
+                <option key={cat.id} value={cat.nombre}>
+                  {cat.nombre}
                 </option>
               ))}
             </select>
+            {errors.categoria && <p className="text-red-500 text-sm">{errors.categoria}</p>}
           </div>
           <div className="flex justify-end mb-4">
             <button
@@ -88,4 +161,5 @@ const ProductModal = ({
     </div>
   );
 };
+
 export default ProductModal;

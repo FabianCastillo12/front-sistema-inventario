@@ -45,6 +45,7 @@ export default function ProductsPage() {
           onUpdateProduct={handleUpdateProduct}
         />
         <ProductAddModal
+          productos={products}
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onAddProduct={handleAddProduct}
