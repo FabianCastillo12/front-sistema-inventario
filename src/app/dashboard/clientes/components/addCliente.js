@@ -20,7 +20,7 @@ const AddClienteModal = ({ isOpen, onClose , onAddCliente }) => {
     /^[a-zA-Z0-9._-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,}$/.test(email);
   const validateTelefono = (telefono) => /^\d{9,15}$/.test(telefono);
   const validateDireccion = (direccion) =>
-    /^[a-zA-Z0-9\s.,#-]{1,50}$/.test(direccion);
+    /^[a-zA-Z0-9\s.,#-]{1,200}$/.test(direccion);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

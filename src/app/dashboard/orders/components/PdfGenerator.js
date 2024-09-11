@@ -14,9 +14,9 @@ const PdfGenerator = ({ contentRef, filename }) => {
         const options = {
             scale: 1.2,
             width: element.offsetWidth,  // Cambia scrollWidth por offsetWidth
-            height: element.scrollHeight, // Aumentamos ligeramente la altura
-            windowWidth: element.offsetWidth - 50,  // Ajustamos el ancho de la ventana
-            windowHeight: element.scrollHeight + 500,
+            height: element.scrollHeight + 300, // Aumentamos ligeramente la altura
+            windowWidth: element.offsetWidth - 50,  // Asegúrate de que windowWidth sea igual al ancho del elemento
+            windowHeight: element.scrollHeight + 1000,
             scrollX: 0,
             scrollY: -window.scrollY - 50, // Ajustamos el punto de inicio de la captura
             useCORS: true,

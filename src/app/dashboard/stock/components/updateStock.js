@@ -1,30 +1,25 @@
-// components/UpdateStockModal.js
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
+// Validación para el stock
+const validateStock = (stock) => /^\d+$/.test(stock);
+
 const UpdateStockModal = ({ isOpen, onClose, product, onUpdateStock }) => {
   const [stock, setStock] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (product) {
-      setStock(product.cantidadStock || ""); // Asegúrate de usar `catidadStock`
-      console.log("Product loaded for update:", product);
+      setStock(product.cantidadStock || "");
     }
   }, [product]);
 
   const handleUpdate = async () => {
-    if (stock === "") {
-      await Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "El stock no puede estar vacío",
-        showConfirmButton: true,
-      });
-      console.log("Stock update failed: Stock field is empty");
+    if (!validateStock(stock)) {
+      setError("La cantidad de stock debe ser un número entero positivo.");
       return;
     }
-
-    console.log("Updating stock for product ID:", product.id, "New stock:", stock);
+    setError(""); // Limpia el error si la validación pasa
 
     try {
       await onUpdateStock(product.id, Number(stock)); // Asegúrate de convertir stock a número
@@ -35,7 +30,6 @@ const UpdateStockModal = ({ isOpen, onClose, product, onUpdateStock }) => {
         showConfirmButton: false,
         timer: 1500,
       });
-      console.log("Stock updated successfully");
       onClose();
     } catch (error) {
       console.error("Error al actualizar el stock:", error);
@@ -64,6 +58,7 @@ const UpdateStockModal = ({ isOpen, onClose, product, onUpdateStock }) => {
               onChange={(e) => setStock(e.target.value)}
               className="border border-gray-300 p-2 w-full rounded-md"
             />
+            {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
           <div className="flex justify-end space-x-4">
             <button
