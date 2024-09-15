@@ -27,7 +27,7 @@ const ViewOrderPdf = ({ formData }) => {
             <Image style={styles.logo} src="/api/placeholder/150/50" />
           </View>
           <View style={styles.headerInfo}>
-            <Text style={styles.companyName}>Tu Empresa S.A.</Text>
+            <Text style={styles.companyName}>LA FABRICA S.A.C.</Text>
             <Text style={styles.companyDetails}>RUC: 20123456789</Text>
             <Text style={styles.companyDetails}>Av. Principal 123, Lima, Perú</Text>
           </View>
