@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useFormats } from "@/hooks/useFormats";
-import PdfGenerator from "@/app/dashboard/orders/components/PdfGenerator";
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import ViewOrderPdf from "./viewOrderPdf";
+import { PDFViewer } from "@react-pdf/renderer";
 
 const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
   const { formatearFechaISO, currencyFormatter } = useFormats();
-  const orderRef = useRef();
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const formData = {
     id: formDataView.id,
@@ -24,7 +24,6 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50 pt-20">
       <div
-        ref={orderRef}
         className="bg-white p-6 rounded-lg shadow-lg max-w-[calc(90vw-4rem)] w-full overflow-y-auto max-h-[calc(78vh-4rem)] scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100"
         style={{ scrollbarWidth: "none" }}
       >
@@ -149,11 +148,14 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
 
       <div className="pt-4 mt-4 border-t border-gray-200 flex justify-end gap-5">
         <div className="flex justify-end mb-4">
-          <PdfGenerator
-            contentRef={orderRef}
-            filename={nombrePedido}
-            setIsGenerating={setIsGenerating}
-          />
+          <PDFDownloadLink
+
+            document={<ViewOrderPdf formData={formData} />}
+            fileName={nombrePedido}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" // Estilos de Tailwind CSS
+          >
+            {({ loading }) => (loading ? 'Generando PDF...' : 'Descargar PDF')}
+          </PDFDownloadLink>
         </div>
         <div className="flex justify-end mb-4">
           <button
