@@ -1,7 +1,7 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, Font, Image } from '@react-pdf/renderer';
+import styles from './facturaStyles';
 
-// Registrar fuentes personalizadas
 Font.register({
   family: 'Roboto',
   fonts: [
@@ -12,7 +12,6 @@ Font.register({
   ],
 });
 
-// Función para formatear la moneda
 const currencyFormatter = (value) => {
   return 'S/ ' + Number(value).toFixed(2);
 };
@@ -29,7 +28,7 @@ const ViewOrderPdf = ({ formData }) => {
           <View style={styles.headerInfo}>
             <Text style={styles.companyName}>LA FABRICA S.A.C.</Text>
             <Text style={styles.companyDetails}>RUC: 20123456789</Text>
-            <Text style={styles.companyDetails}>Av. Principal 123, Lima, Perú</Text>
+            <Text style={styles.companyDetails}>Av. Principal 123, Ica, Perú</Text>
           </View>
         </View>
 
@@ -72,7 +71,6 @@ const ViewOrderPdf = ({ formData }) => {
           ))}
         </View>
 
-        {/* Totales */}
         <View style={styles.totals}>
           <View style={styles.totalsRow}>
             <Text style={styles.totalLabel}>Base imponible:</Text>
@@ -88,7 +86,6 @@ const ViewOrderPdf = ({ formData }) => {
           </View>
         </View>
 
-        {/* Pie de página */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Gracias por su compra</Text>
           <Text style={styles.footerText}>Para cualquier consulta, contáctenos al +51 123 456 789</Text>
@@ -97,171 +94,5 @@ const ViewOrderPdf = ({ formData }) => {
     </Document>
   );
 };
-
-// Estilos mejorados
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    padding: 30,
-    fontFamily: 'Roboto',
-  },
-  header: {
-    flexDirection: 'row',
-    marginBottom: 20,
-  },
-  logoContainer: {
-    width: 150,
-    height: 50,
-    marginRight: 20,
-  },
-  logo: {
-    width: '100%',
-    height: '100%',
-  },
-  headerInfo: {
-    flexGrow: 1,
-  },
-  companyName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  companyDetails: {
-    fontSize: 10,
-    color: '#555555',
-  },
-  invoiceInfo: {
-    alignItems: 'flex-end',
-    marginBottom: 20,
-  },
-  invoiceTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#1a5f7a',
-  },
-  invoiceNumber: {
-    fontSize: 12,
-    fontWeight: 'medium',
-  },
-  invoiceDate: {
-    fontSize: 10,
-    color: '#555555',
-  },
-  clientInfo: {
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-  },
-  sectionTitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    color: '#1a5f7a',
-  },
-  clientDetail: {
-    fontSize: 10,
-    marginBottom: 2,
-  },
-  table: {
-    display: 'table',
-    width: 'auto',
-    marginVertical: 10,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#bfbfbf',
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#1a5f7a',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#bfbfbf',
-    borderBottomStyle: 'solid',
-  },
-  tableColSmall: {
-    width: '8%',
-    borderRightWidth: 1,
-    borderRightColor: '#bfbfbf',
-    padding: 5,
-  },
-  tableColMedium: {
-    width: '15%',
-    borderRightWidth: 1,
-    borderRightColor: '#bfbfbf',
-    padding: 5,
-  },
-  tableColLarge: {
-    width: '32%',
-    borderRightWidth: 1,
-    borderRightColor: '#bfbfbf',
-    padding: 5,
-  },
-  tableCellHeader: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#ffffff',
-  },
-  tableCell: {
-    fontSize: 9,
-    color: '#333333',
-  },
-  totals: {
-    marginTop: 20,
-    alignItems: 'flex-end',
-  },
-  totalsRow: {
-    flexDirection: 'row',
-    marginBottom: 5,
-  },
-  totalsRowBold: {
-    flexDirection: 'row',
-    marginTop: 5,
-    borderTopWidth: 1,
-    borderTopColor: '#1a5f7a',
-    paddingTop: 5,
-  },
-  totalLabel: {
-    fontSize: 10,
-    fontWeight: 'medium',
-    marginRight: 10,
-  },
-  totalLabelBold: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginRight: 10,
-    color: '#1a5f7a',
-  },
-  totalValue: {
-    fontSize: 10,
-    width: 80,
-    textAlign: 'right',
-  },
-  totalValueBold: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    width: 80,
-    textAlign: 'right',
-    color: '#1a5f7a',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 30,
-    right: 30,
-    textAlign: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#bfbfbf',
-    paddingTop: 10,
-  },
-  footerText: {
-    fontSize: 8,
-    color: '#555555',
-  },
-});
 
 export default ViewOrderPdf;
