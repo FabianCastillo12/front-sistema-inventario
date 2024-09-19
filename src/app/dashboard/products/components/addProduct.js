@@ -15,7 +15,6 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
   const [categorias, setCategorias] = useState([]);
   const [errors, setErrors] = useState({});
   const user = useStore((state) => state.user);
-  console.log("productos en stock", productos);
   // Fetch categories
   useEffect(() => {
     const traerCategorias = async () => {

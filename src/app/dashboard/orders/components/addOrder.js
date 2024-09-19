@@ -3,9 +3,12 @@ import React, { useState, useEffect } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { useClientes } from "@/hooks/useClients";
 import { useFormats } from "@/hooks/useFormats";
+import { useSession } from "next-auth/react";
 
 const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
-  const { products } = useProducts();
+  const [products, setProducts] = useState([]);
+  console.log(products);
+  const { data: session } = useSession();
   const { clientes } = useClientes();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCriteria, setSearchCriteria] = useState("nombre");
@@ -13,7 +16,27 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
   const [productSearchQuery, setProductSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const { currencyFormatter } = useFormats();
-  const [isReviewing, setIsReviewing] = useState(false); // Nuevo estado para el paso de detalles
+  const [isReviewing, setIsReviewing] = useState(false); 
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("http://localhost:3010/producto/", {
+        headers: {
+          Authorization: `Bearer ${session.user.token}`,
+        },
+      });
+      const data = await res.json();
+      setProducts(data.sort((a, b) => a.id - b.id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (session?.user?.token) {
+      fetchProducts();
+    }
+  }, [session]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -87,7 +110,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.id) {
@@ -110,9 +133,10 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
       detalles: detalles,
     };
     console.log("orderData", orderData);
-    onAddOrder(orderData);
+    await onAddOrder(orderData);  
     setFormData({ id: "", productos: [], total: 0 });
-    setIsReviewing(false); // Regresa al formulario después de guardar
+    setIsReviewing(false); 
+    fetchProducts();
     onClose();
   };
 

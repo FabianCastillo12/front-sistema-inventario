@@ -8,13 +8,14 @@ export function useProducts() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const { data: session } = useSession();
-  console.log(categoria, products);
+
   useEffect(() => {
     if (session?.user?.token) {
       fetchProducts();
       fetchCategoria();
     }
   }, [session]);
+
   const fetchCategoria = async () => {
     try {
       const res = await fetch("http://localhost:3010/categoria", {
@@ -103,10 +104,8 @@ export function useProducts() {
             }
           );
           const data = await res.json();
-          console.log(data);
           if (res.ok) {
             await fetchProducts();
-            console.log(res)
             await Swal.fire({
               position: "center",
               icon: "success",
@@ -176,5 +175,6 @@ export function useProducts() {
     handleUpdateProduct,
     handleDeleteProduct,
     categoria,
+    fetchProducts,
   };
 }

@@ -4,7 +4,6 @@ import OrdersTable from "@/app/dashboard/orders/components/ordersTable";
 import { IoAdd } from "react-icons/io5";
 import OrderAddModal from "@/app/dashboard/orders/components/addOrder";
 import { useStore } from "@/stores/autenticacion";
-import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { usePedidos } from "@/hooks/usePedidos"
 

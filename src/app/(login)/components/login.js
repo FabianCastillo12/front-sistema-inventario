@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { signIn, useSession, signOut } from "next-auth/react";
+
+
 const LoginForm = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -29,6 +31,12 @@ const LoginForm = () => {
 
     if (responseNextAuth?.error) {
       setErrors(responseNextAuth.error.split(","));
+      await Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al iniciar sesion",
+        timer: 1500,
+      });
       return;
     }
     console.log("session", session);

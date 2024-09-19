@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { useStock } from "./useStock";
+import { useProducts } from "@/hooks/useProducts";
 
 export function usePedidos() {
   const [pedidos, setPedidos] = useState([]);
   const { data: session } = useSession();
   const { stock, handleUpdateStock } = useStock();
   const [originalOrderState, setOriginalOrderState] = useState({});
+  const { fetchProducts } = useProducts();
 
   useEffect(() => {
     if (session?.user?.token) {
@@ -48,6 +50,7 @@ export function usePedidos() {
       const data = await res.json();
       if (res.ok) {
         await fetchPedidos();
+        await fetchProducts();
         await updateAddOrderStock(newOrder);
         await Swal.fire({
           position: "center",
