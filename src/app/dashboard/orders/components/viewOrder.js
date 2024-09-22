@@ -1,8 +1,7 @@
 import React, { useRef } from "react";
 import { useFormats } from "@/hooks/useFormats";
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import ViewOrderPdf from "./viewOrderPdf";
-import { PDFViewer } from "@react-pdf/renderer";
 
 const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
   const { formatearFechaISO, currencyFormatter } = useFormats();
@@ -22,11 +21,8 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
   const nombrePedido = `Fact${formData.id}_${formData.cliente}_${formData.fecha}.pdf`;
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50 pt-20">
-      <div
-        className="bg-white p-6 rounded-lg shadow-lg max-w-[calc(90vw-4rem)] w-full overflow-y-auto max-h-[calc(78vh-4rem)] scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100"
-        style={{ scrollbarWidth: "none" }}
-      >
+    <div className="fixed inset-0 flex flex-col items-center justify-start bg-gray-800 bg-opacity-50 text-black z-50 ">
+      <div className="bg-white p-6 rounded-lg w-11/12 overflow-y-auto mt-4">
         <div className="flex items-center justify-between border-b pb-4">
           <div className="flex items-center">
             <i className="fas fa-bars mr-2"></i>
@@ -149,12 +145,11 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
       <div className="pt-4 mt-4 border-t border-gray-200 flex justify-end gap-5">
         <div className="flex justify-end mb-4">
           <PDFDownloadLink
-
             document={<ViewOrderPdf formData={formData} />}
             fileName={nombrePedido}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" // Estilos de Tailwind CSS
           >
-            {({ loading }) => (loading ? 'Generando PDF...' : 'Descargar PDF')}
+            {({ loading }) => (loading ? "Generando PDF..." : "Descargar PDF")}
           </PDFDownloadLink>
         </div>
         <div className="flex justify-end mb-4">

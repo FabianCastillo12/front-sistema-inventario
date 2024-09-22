@@ -7,10 +7,8 @@ import { ProgressCircleUsageExample } from "./components/progreso";
 import { useReports } from "@/hooks/useReports";
 
 export default function DashboardPage() {
-  const { ventasHoy, cantidadPorTipoProductoSemanal } =
-    useReports();
+  const { ventasHoy, cantidadPorTipoProductoSemanal } = useReports();
   const user = useStore((state) => state.user);
-
   const ultimasVentas = ventasHoy
     .sort((a, b) => new Date(b.fecha_pedido) - new Date(a.fecha_pedido))
     .slice(0, 4);
@@ -45,7 +43,6 @@ export default function DashboardPage() {
 
       <div className="  bg-[#21222D] p-5 col-span-12 lg:col-span-6  xl:col-span-3 ">
         <h4 className=" text-3xl font-semibold text-white mb-6">Reportes</h4>
-
         <ProgressCircleUsageExample />
       </div>
       <div className="  bg-[#21222D] p-5 col-span-12 lg:col-span-6  xl:col-span-9">

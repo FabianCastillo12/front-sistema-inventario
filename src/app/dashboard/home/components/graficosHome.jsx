@@ -22,8 +22,6 @@ const valueFormatter = (number) =>
 const LineChartUsageExample = () => {
   return (
     <div className="w-1/3 mx-auto   ">
-      {" "}
-      {/* Ajusta el ancho máximo y centra el gráfico */}
       <h3 className="text-lg font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
         Newsletter revenue over time (USD)
       </h3>

@@ -4,7 +4,9 @@ import { useSession } from "next-auth/react";
 export function useReports() {
   const [ventasHoy, setVentasHoy] = useState([]);
   const [ventas2años, setVentas2años] = useState([]);
-  const [cantidadPorTipoProductoSemanal, setCantidadPorTipoProductoSemanal] = useState([]);
+  const [cantidadPorTipoProductoSemanal, setCantidadPorTipoProductoSemanal] =
+    useState([]);
+  const [pedidos30Dias, setPedido30Dias] = useState([]);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -12,6 +14,7 @@ export function useReports() {
       fetchVentasHoy();
       fetchVentas2años();
       fetchCantidadPorTipoProductoSemanal();
+      fetchPedido30Dias();
     }
   }, [session]);
 
@@ -57,14 +60,20 @@ export function useReports() {
 
   const fetchCantidadPorTipoProductoSemanal = async () => {
     try {
-      const res = await fetch("http://localhost:3010/reportes/ventas-categoria-semanal", {
-        headers: {
-          Authorization: `Bearer ${session.user.token}`,
-        },
-      });
+      const res = await fetch(
+        "http://localhost:3010/reportes/ventas-categoria-semanal",
+        {
+          headers: {
+            Authorization: `Bearer ${session.user.token}`,
+          },
+        }
+      );
 
       if (!res.ok) {
-        console.error("Error fetching cantidad de producto por tipo", res.statusText);
+        console.error(
+          "Error fetching cantidad de producto por tipo",
+          res.statusText
+        );
         return;
       }
 
@@ -74,5 +83,30 @@ export function useReports() {
       console.error("Error fetching cantidad de producto por tipo", error);
     }
   };
-  return { ventasHoy, ventas2años, cantidadPorTipoProductoSemanal };
+
+  const fetchPedido30Dias = async () => {
+    try {
+      const res = await fetch("http://localhost:3010/reportes/ventas-30-dias", {
+        headers: {
+          Authorization: `Bearer ${session.user.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        console.error("Error fetching pedidos de 30 días:", res.statusText);
+        return;
+      }
+
+      const data = await res.json();
+      setPedido30Dias(data);
+    } catch (error) {
+      console.error("Error fetching pedidos de 30 días:", error);
+    }
+  };
+  return {
+    ventasHoy,
+    ventas2años,
+    cantidadPorTipoProductoSemanal,
+    pedidos30Dias,
+  };
 }

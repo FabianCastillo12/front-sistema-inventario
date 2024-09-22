@@ -8,7 +8,6 @@ export function usePedidos() {
   const [pedidos, setPedidos] = useState([]);
   const { data: session } = useSession();
   const { stock, handleUpdateStock } = useStock();
-  const [originalOrderState, setOriginalOrderState] = useState({});
   const { fetchProducts } = useProducts();
 
   useEffect(() => {
@@ -129,75 +128,51 @@ export function usePedidos() {
     }
   };
 
-  const handleUpdateOrder = async (formData, idOrder) => {
-    try {
-      // Fetch the original order before updating
-      const originalOrderRes = await fetch(`http://localhost:3010/pedidos/${idOrder}`, {
-        headers: {
-          Authorization: `Bearer ${session.user.token}`,
-        },
-      });
-      const originalOrder = await originalOrderRes.json();
-      setOriginalOrderState(originalOrder);
-
-      const res = await fetch(`http://localhost:3010/pedidos/${idOrder}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        await updateOrderStock(originalOrder, formData);
-        await fetchPedidos();
-        await Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Pedido actualizado",
-          showConfirmButton: false,
-          timer: 1500,
+  const handleConfirmOrder = async (idOrder) => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: `Se confirmará la entrega el pedido ${idOrder}. Esta acción no se puede deshacer.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, confirmar",
+      cancelButtonText: "Cancelar",
+    });
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`http://localhost:3010/pedidos/${idOrder}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.user.token}`,
+          },
+          body: JSON.stringify({
+            estado: "Entregado",
+          }),
         });
-      } else {
-        console.error("Error al actualizar el pedido:", data.message);
-        await Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "Error al actualizar el pedido",
-          showConfirmButton: true,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updateOrderStock = async (originalOrder, updatedOrder) => {
-    // Compare the original and updated orders to adjust the stock
-    const originalDetalles = originalOrder.detalles || [];
-    const updatedDetalles = updatedOrder.detalles || [];
-
-    // Create maps for quick lookup
-    const originalMap = new Map(originalDetalles.map(d => [d.productoId, d.cantidad]));
-    const updatedMap = new Map(updatedDetalles.map(d => [d.productoId, d.cantidad]));
-
-    // Iterate over all products to check if stock needs to be updated
-    for (const [productoId, originalCantidad] of originalMap) {
-      const updatedCantidad = updatedMap.get(productoId) || 0;
-      const cantidadDiferencia = updatedCantidad - originalCantidad;
-
-      if (cantidadDiferencia !== 0) {
-        const productoStock = stock.find((product) => product.id === productoId).cantidadStock;
-        handleUpdateStock(productoId, productoStock - cantidadDiferencia);
-      }
-    }
-
-    // Handle new products added to the order
-    for (const [productoId, updatedCantidad] of updatedMap) {
-      if (!originalMap.has(productoId)) {
-        const productoStock = stock.find((product) => product.id === productoId).cantidadStock;
-        handleUpdateStock(productoId, productoStock - updatedCantidad);
+        const data = await res.json();
+        if (res.ok) {
+          await fetchPedidos();
+          console.log(data);
+          await Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Entrega confirmada",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          console.error("Error al actualizar el pedido:", data.message);
+          await Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error al actualizar el pedido",
+            showConfirmButton: true,
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
   };
@@ -206,6 +181,6 @@ export function usePedidos() {
     pedidos,
     handleAddOrder,
     handleDeleteOrder,
-    handleUpdateOrder
+    handleConfirmOrder
   };
 }
