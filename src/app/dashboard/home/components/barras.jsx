@@ -11,7 +11,7 @@ export function BarChartExampleWithGroups() {
     <div className=" w-full h-auto">
       <h3 className="text-lg font-medium text-white">Venta Gaseosas: Semana</h3>
       <BarChart
-        className="mt-6 h-80"
+        className="mt-6 h-[30rem]"
         data={cantidadPorTipoProductoSemanal}
         index="name"
         categories={["Total","450ml", "1.1L", "2L", "3L"]}

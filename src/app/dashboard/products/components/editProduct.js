@@ -11,19 +11,16 @@ const ProductModal = ({
     id: formDataEdit.id,
     nombre: formDataEdit.nombre,
     precio: formDataEdit.precio,
-    categoria: formDataEdit.categoria.nombre,
     estado: formDataEdit.estado,
   });
 
   const [errors, setErrors] = useState({
     nombre: "",
     precio: "",
-    categoria: "",
   });
 
   const validateNombre = (nombre) => /^[a-zA-Z0-9\s\(\)]{1,50}$/.test(nombre);
   const validatePrecio = (precio) => /^\d+(\.\d{1,2})?$/.test(precio);
-  const validateCategoria = (categoria) => categoria !== "";
 
   // Handle input changes
   const handleChange = (e) => {
@@ -44,12 +41,6 @@ const ProductModal = ({
           precio: validatePrecio(value) ? "" : "El precio debe ser un número válido con hasta dos decimales.",
         }));
         break;
-      case "categoria":
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          categoria: validateCategoria(value) ? "" : "Selecciona una categoría válida.",
-        }));
-        break;
       default:
         break;
     }
@@ -62,14 +53,12 @@ const ProductModal = ({
     const newErrors = {
       nombre: validateNombre(formData.nombre) ? "" : "El nombre debe contener solo letras, números y espacios.",
       precio: validatePrecio(formData.precio) ? "" : "El precio debe ser un número válido con hasta dos decimales.",
-      categoria: validateCategoria(formData.categoria) ? "" : "Selecciona una categoría válida.",
     };
 
     setErrors(newErrors);
     const hasErrors = Object.values(newErrors).some((error) => error);
     if (hasErrors) return;
 
-    // Check if product with the same name already exists
     const productExists = products.some(p => p.nombre === formData.nombre && p.id !== formData.id);
     if (productExists) {
       setErrors(prevErrors => ({
@@ -78,7 +67,6 @@ const ProductModal = ({
       }));
       return;
     }
-
     onUpdateProduct(formData);
     setIsEditModalOpen(false);
   };
@@ -88,7 +76,6 @@ const ProductModal = ({
       id: formDataEdit.id,
       nombre: formDataEdit.nombre,
       precio: formDataEdit.precio,
-      categoria: formDataEdit.categoria.nombre,
       estado: formDataEdit.estado,
     });
   }, [formDataEdit]);
@@ -122,24 +109,6 @@ const ProductModal = ({
               required
             />
             {errors.precio && <p className="text-red-500 text-sm">{errors.precio}</p>}
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Categoría</label>
-            <select
-              name="categoria"
-              value={formData.categoria}
-              onChange={handleChange}
-              className={`mt-1 block w-full border ${errors.categoria ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
-              required
-            >
-              <option value="">Selecciona una categoría</option>
-              {categoria.map((cat) => (
-                <option key={cat.id} value={cat.nombre}>
-                  {cat.nombre}
-                </option>
-              ))}
-            </select>
-            {errors.categoria && <p className="text-red-500 text-sm">{errors.categoria}</p>}
           </div>
           <div className="flex justify-end mb-4">
             <button

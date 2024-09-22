@@ -16,7 +16,7 @@ export default function ItemsHome({ venta }) {
   });
 
   return (
-    <div className="bg-[#171821] p-4 w-full rounded-md shadow-sm md:max-w-[150px] lg:min-w-[200px] lg:max-w-[250px]">
+    <div className="bg-[#171821] p-4 w-full rounded-md shadow-sm md:max-w-[150px] lg:min-w-[200px] lg:max-w-[230px]">
       <div className="flex items-center gap-2">
         <IoTrendingUp size={25} color="#FEB95A" />
         <div>
