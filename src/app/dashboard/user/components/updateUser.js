@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function UpdateUserModal({
-  user,
-  isOpen,
-  onClose,
-  onUpdateUser,
-}) {
+export default function UpdateUserModal({ user, isOpen, onClose, onUpdateUser }) {
   const [formData, setFormData] = useState({ ...user });
 
   useEffect(() => {
@@ -29,56 +24,65 @@ export default function UpdateUserModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center text-black">
-      <div className="bg-white p-6 rounded shadow-lg w-80">
-        <h2 className="text-xl font-semibold mb-4">Editar Usuario</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Nombre</label>
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+      <div className="bg-[#2A2C39] p-6 rounded-lg shadow-lg max-w-sm w-full">
+        <h2 className="text-xl font-semibold text-white mb-4">Editar Usuario</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="nombre" className="block text-gray-300 text-sm font-medium mb-1">
+              Nombre
+            </label>
             <input
               type="text"
               name="nombre"
+              id="nombre"
               value={formData.nombre}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded p-2"
+              className="w-full border border-gray-600 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Email</label>
+          <div>
+            <label htmlFor="email" className="block text-gray-300 text-sm font-medium mb-1">
+              Email
+            </label>
             <input
               type="email"
               name="email"
+              id="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded p-2"
+              className="w-full border border-gray-600 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Rol</label>
+          <div>
+            <label htmlFor="role" className="block text-gray-300 text-sm font-medium mb-1">
+              Rol
+            </label>
             <select
               name="role"
+              id="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded p-2"
+              className="w-full border border-gray-600 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             >
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
+              <option value="admin">Administrador</option>
+              <option value="user">Usuario</option>
             </select>
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              className="px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-800 text-white rounded-md hover:from-gray-700 hover:to-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition-colors duration-200"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-md hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
             >
               Guardar
             </button>

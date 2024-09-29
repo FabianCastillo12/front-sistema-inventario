@@ -1,7 +1,29 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useFormats } from "@/hooks/useFormats";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ViewOrderPdf from "./viewOrderPdf";
+
+const TruncateWithTooltip = ({ text, maxLength = 20, tooltipPosition = "top" }) => {
+  const truncatedText = text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+  
+  const tooltipClasses = {
+    top: "bottom-full mb-2",
+    bottom: "top-full mt-2"
+  };
+  
+  return (
+    <div className="relative group">
+      <div className="text-sm text-gray-300 truncate">
+        {truncatedText}
+      </div>
+      {text.length > maxLength && (
+        <div className={`absolute z-50 invisible group-hover:visible bg-gray-800 text-white text-xs rounded p-2 w-max max-w-xs break-words left-0 ${tooltipClasses[tooltipPosition]}`}>
+          {text}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
   const { formatearFechaISO, currencyFormatter } = useFormats();
@@ -21,146 +43,125 @@ const ViewOrderModal = ({ setIsViewModalOpen, formDataView }) => {
   const nombrePedido = `Fact${formData.id}_${formData.cliente}_${formData.fecha}.pdf`;
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-start bg-gray-800 bg-opacity-50 text-black z-50 ">
-      <div className="bg-white p-6 rounded-lg w-11/12 overflow-y-auto mt-4">
-        <div className="flex items-center justify-between border-b pb-4">
-          <div className="flex items-center">
-            <i className="fas fa-bars mr-2"></i>
-            <h2 className="font-medium mr-2">
-              ID del Pedido: <span className="font-bold">{formData.id}</span>
-            </h2>
-          </div>
-          <div className="flex items-center">
-            <i className="fas fa-bars mr-2"></i>
-            <h2 className="font-medium mr-2">
-              Fecha del Pedido:
-              <span className="font-bold"> {formData.fecha}</span>
-            </h2>
-          </div>
-
-          <div className="flex items-center">
-            <i className="fas fa-bars mr-2"></i>
-            <h2 className="font-medium mr-2">
-              Estado del Pedido:{" "}
-              <span className="font-bold">{formData.estado}</span>
-            </h2>
-          </div>
-        </div>
-
-        <div className="py-4">
-          <div className="font-medium mb-2">Cliente:</div>
-          <span className="font-bold">{formData.cliente}</span>
-        </div>
-        <div className="py-4">
-          <div className="font-medium mb-2">Email:</div>
-          <span className="font-bold">{formData.email}</span>
-        </div>
-        <div className="py-4">
-          <div className="font-medium mb-2">Teléfono:</div>
-          <span className="font-bold">{formData.telefono}</span>
-        </div>
-        <div className="py-4">
-          <div className="font-medium mb-2">Dirección:</div>
-          <span className="font-bold">{formData.direccion}</span>
-        </div>
-
-        <div className="flex border-b mb-4">
-          <div className="px-4 py-2 cursor-pointer border-b-2 border-blue-500 text-blue-500 font-medium">
-            Líneas del pedido
-          </div>
-        </div>
-
-        <div className="p-4 border-t border-gray-200">
-          <h3 className="text-lg font-medium mb-4">Productos</h3>
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead className="bg-[#05023c]">
-              <tr>
-                <th className="py-2 px-4 border-b text-white">ID</th>
-                <th className="py-2 px-4 border-b text-white">Nombre</th>
-                <th className="py-2 px-4 border-b text-white">Descripción</th>
-                <th className="py-2 px-4 border-b text-white">Cantidad</th>
-                <th className="py-2 px-4 border-b text-white">
-                  Precio Unitario
-                </th>
-                <th className="py-2 px-4 border-b text-white">Impuestos</th>
-                <th className="py-2 px-4 border-b text-white">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody className="text-black text-center">
-              {formData.detallePedidos.map((detalle, index) => (
-                <tr key={index}>
-                  <td className="py-2 px-4 border-b">{index + 1}</td>
-                  <td className="py-2 px-4 border-b">
-                    {detalle.producto.nombre}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {detalle.producto.categoria.descripcion}
-                  </td>
-                  <td className="py-2 px-4 border-b">{detalle.cantidad}</td>
-                  <td className="py-2 px-4 border-b">
-                    {currencyFormatter.format(detalle.producto.precio)}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {currencyFormatter.format(
-                      detalle.producto.precio * 0.18 * detalle.cantidad
-                    )}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {currencyFormatter.format(detalle.subTotal)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex justify-end">
-          <div className="flex flex-col items-end">
-            <div className="flex items-center mb-2">
-              <span className="font-medium text-gray-700 mr-2">
-                Base imponible:
-              </span>
-              <span className="font-bold">
-                {currencyFormatter.format(
-                  formData.total - formData.total * 0.18
-                )}
-              </span>
-            </div>
-            <div className="flex items-center mb-2">
-              <span className="font-medium text-gray-700 mr-2">IGV:</span>
-              <span className="font-bold">
-                {currencyFormatter.format(formData.total * 0.18)}
-              </span>
+    <div className="fixed inset-0 flex flex-col bg-gray-800 bg-opacity-50 z-50 overflow-hidden">
+      <div className="flex-grow overflow-y-auto" style={{ scrollbarWidth: "none" }}>
+        <div className="bg-[#2A2C39] p-6 rounded-lg w-11/12 mx-auto my-8 text-white shadow-xl">
+          <div className="flex items-center justify-between border-b border-[#3D4059] pb-4">
+            <div className="flex items-center">
+              <i className="fas fa-bars mr-2 text-gray-300"></i>
+              <h2 className="font-medium mr-2 text-gray-300">
+                ID del Pedido: <span className="font-bold text-white">{formData.id}</span>
+              </h2>
             </div>
             <div className="flex items-center">
-              <span className="font-medium text-gray-700 mr-2">Total:</span>
-              <span className="text-xl font-bold">
-                {currencyFormatter.format(formData.total)}
-              </span>
+              <i className="fas fa-calendar mr-2 text-gray-300"></i>
+              <h2 className="font-medium mr-2 text-gray-300">
+                Fecha del Pedido:
+                <span className="font-bold text-white"> {formData.fecha}</span>
+              </h2>
+            </div>
+            <div className="flex items-center">
+              <i className="fas fa-check-circle mr-2 text-gray-300"></i>
+              <h2 className="font-medium mr-2 text-gray-300">
+                Estado del Pedido:{" "}
+                <span className="font-bold text-white">{formData.estado}</span>
+              </h2>
+            </div>
+          </div>
+
+          <div className="py-4">
+            <div className="font-medium mb-2 text-gray-300">Cliente:</div>
+            <span className="font-bold text-white">{formData.cliente}</span>
+          </div>
+          <div className="py-4">
+            <div className="font-medium mb-2 text-gray-300">Email:</div>
+            <span className="font-bold text-white">{formData.email}</span>
+          </div>
+          <div className="py-4">
+            <div className="font-medium mb-2 text-gray-300">Teléfono:</div>
+            <span className="font-bold text-white">{formData.telefono}</span>
+          </div>
+          <div className="py-4">
+            <div className="font-medium mb-2 text-gray-300">Dirección:</div>
+            <span className="font-bold text-white">{formData.direccion}</span>
+          </div>
+
+          <div className="flex border-b border-[#3D4059] mb-4">
+            <div className="px-4 py-2 cursor-pointer border-b-2 border-blue-500 text-blue-500 font-medium">
+              Líneas del pedido
+            </div>
+          </div>
+
+          <div className="p-4 border-t border-[#3D4059]">
+            <h3 className="text-lg font-medium mb-4 text-white">Productos</h3>
+            <div className="overflow-x-auto bg-[#2A2C39] rounded-lg shadow-md">
+              <table className="w-full table-fixed divide-y divide-[#3D4059]">
+                <thead className="bg-[#3D4059]">
+                  <tr>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">ID</th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-2/12">Nombre</th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-3/12">Descripción</th>
+                    <th scope="col" className="px-3 py-3 text-center text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">Cantidad</th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-2/12">Precio Unitario</th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">Impuestos</th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-2/12">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-[#2A2C39] divide-y divide-[#3D4059]">
+                  {formData.detallePedidos.map((detalle, index) => (
+                    <tr key={index} className="hover:bg-[#343747] transition-colors duration-150 ease-in-out">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-300">{index + 1}</td>
+                      <td className="px-3 py-4 whitespace-nowrap">
+                        <TruncateWithTooltip text={detalle.producto.nombre} maxLength={20} />
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap">
+                        <TruncateWithTooltip text={detalle.producto.categoria.descripcion} maxLength={30} />
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-300 text-center">{detalle.cantidad}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-300">{currencyFormatter.format(detalle.producto.precio)}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-300">{currencyFormatter.format(detalle.producto.precio * 0.18 * detalle.cantidad)}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-300">{currencyFormatter.format(detalle.subTotal)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="flex justify-end mt-4">
+            <div className="text-right">
+              <div className="mb-1">
+                <span className="font-medium text-gray-300 mr-2">Base imponible:</span>
+                <span className="font-bold text-white">{currencyFormatter.format(formData.total - formData.total * 0.18)}</span>
+              </div>
+              <div className="mb-1">
+                <span className="font-medium text-gray-300 mr-2">IGV:</span>
+                <span className="font-bold text-white">{currencyFormatter.format(formData.total * 0.18)}</span>
+              </div>
+              <div>
+                <span className="font-medium text-gray-300 mr-2">Total:</span>
+                <span className="text-xl font-bold text-white">{currencyFormatter.format(formData.total)}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="pt-4 mt-4 border-t border-gray-200 flex justify-end gap-5">
-        <div className="flex justify-end mb-4">
-          <PDFDownloadLink
-            document={<ViewOrderPdf formData={formData} />}
-            fileName={nombrePedido}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" // Estilos de Tailwind CSS
-          >
-            {({ loading }) => (loading ? "Generando PDF..." : "Descargar PDF")}
-          </PDFDownloadLink>
-        </div>
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={() => setIsViewModalOpen(false)}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
+      <div className="bg-transparent p-4 flex justify-center gap-5 w-full">
+  <PDFDownloadLink
+    document={<ViewOrderPdf formData={formData} />}
+    fileName={nombrePedido}
+    className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-6 py-2 rounded-full transition-colors duration-150 ease-in-out shadow-md"
+  >
+    {({ loading }) => (loading ? "Generando PDF..." : "Descargar PDF")}
+  </PDFDownloadLink>
+  <button
+    onClick={() => setIsViewModalOpen(false)}
+    className="bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-600 hover:to-gray-800 text-white px-6 py-2 rounded-full transition-colors duration-150 ease-in-out shadow-md"
+  >
+    Cerrar
+  </button>
+</div>
     </div>
   );
 };

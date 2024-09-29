@@ -1,61 +1,59 @@
 import React from "react";
-import Link from "next/link";
 
 export default function UserComponent({ users, onEditUser, onDeleteUser }) {
-  console.log(users);
   return (
-    <>
-      <table className="min-w-full bg-white border-collapse block md:table">
-        <thead className="block md:table-header-group">
-          <tr className="border border-grey-500 md:border-none block md:table-row">
-            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+    <div className="bg-[#2A2C39] rounded-lg shadow-md overflow-hidden" >
+      <table className="min-w-full divide-y divide-[#3D4059]">
+        <thead>
+          <tr className="bg-[#3D4059]">
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
               Nombre
             </th>
-            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
               Email
             </th>
-            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell text-center">
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
               Rol
             </th>
-            <th className="bg-[#05023c] p-2 text-white font-bold md:border md:border-grey-500 text-center block md:table-cell">
+            <th scope="col" className="px-4 py-3 text-center text-xs font-semibold text-gray-300 uppercase tracking-wider w-52">
               Acciones
             </th>
           </tr>
         </thead>
-        <tbody className="block md:table-row-group text-black">
-          {users &&
-            users?.map((user) => (
-              <tr
-                key={user.id}
-                className="bg-white border border-grey-500 md:border-none block md:table-row"
-              >
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  {user.nombre}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  {user.email}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 block md:table-cell text-center">
-                  {user.role}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 block md:table-cell text-center">
+        <tbody className="divide-y divide-[#3D4059]">
+          {users?.map((user) => (
+            <tr key={user.id} className="hover:bg-[#343747] transition-colors duration-150 ease-in-out">
+              <td className="px-6 py-2 whitespace-nowrap">
+                <div className="text-sm font-medium text-white">{user.nombre}</div>
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                <div className="text-sm text-gray-300">{user.email}</div>
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                  {user.role === 'admin' ? 'Administrador' : 'Usuario'}
+                </span>
+              </td>
+              <td className="py-2 whitespace-nowrap text-right">
+                <div className="flex justify-end items-center pr-4">
                   <button
                     onClick={() => onEditUser(user)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 border border-blue-500 rounded mr-1"
+                    className="text-[#4B84F0] hover:text-[#3D72D9] bg-[#2A2C39] hover:bg-[#343747] px-2 py-1 rounded-md transition-colors duration-150 ease-in-out text-sm mr-2"
                   >
                     Editar
                   </button>
                   <button
                     onClick={() => onDeleteUser(user.id)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 border border-red-500 rounded"
+                    className="text-red-400 hover:text-red-500 bg-[#2A2C39] hover:bg-[#343747] px-2 py-1 rounded-md transition-colors duration-150 ease-in-out text-sm"
                   >
-                    Borrar
+                    Eliminar
                   </button>
-                </td>
-              </tr>
-            ))}
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }

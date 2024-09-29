@@ -2,38 +2,48 @@ import React from "react";
 
 const StockList = ({ stock, onEdit }) => {
   return (
-    <table className="min-w-full bg-white border-collapse text-black">
-      <thead>
-        <tr className="bg-[#05023c] text-white">
-          <th className="p-2 font-bold text-left">ID</th>
-          <th className="p-2 font-bold text-left">Nombre</th>
-          <th className="p-2 font-bold text-left">Cantidad</th>
-          <th className="p-2 font-bold text-left">Precio</th>
-          <th className="p-2 font-bold text-left">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {stock &&
-          stock.map((item) => (
-            <tr key={item.id} className="border-b">
-              <td className="p-2 text-left">{item.id}</td>
-              <td className="p-2 text-left">{item.nombre}</td>
-              <td className="p-2 text-left">{item.cantidadStock}</td>
-              <td className="p-2 text-left">
-                {item.precio ? parseFloat(item.precio).toFixed(2) : "N/A"}
-              </td>
-              <td className="p-2 text-left">
-                <button
-                  onClick={() => onEdit(item)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                >
-                  Editar
-                </button>
-              </td>
-            </tr>
-          ))}
-      </tbody>
-    </table>
+    <div className="bg-[#2A2C39] rounded-lg shadow-md overflow-hidden">
+      <table className="min-w-full divide-y divide-[#3D4059]">
+        <thead>
+          <tr className="bg-[#3D4059]">
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">ID</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Nombre</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Cantidad</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Precio</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-[#3D4059]">
+          {stock &&
+            stock.map((item) => (
+              <tr key={item.id} className="hover:bg-[#343747] transition-colors duration-150 ease-in-out">
+                <td className="px-6 py-2 whitespace-nowrap">
+                  <div className="text-sm font-medium text-white">{item.id}</div>
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap">
+                  <div className="text-sm text-gray-300">{item.nombre}</div>
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap">
+                  <div className="text-sm text-gray-300">{item.cantidadStock}</div>
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap">
+                  <div className="text-sm text-gray-300">
+                    {item.precio ? parseFloat(item.precio).toFixed(2) : "N/A"}
+                  </div>
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap">
+                  <button
+                    onClick={() => onEdit(item)}
+                    className="text-[#4B84F0] hover:text-[#3D72D9] bg-[#2A2C39] hover:bg-[#343747] px-2 py-1 rounded-md transition-colors duration-150 ease-in-out text-sm"
+                  >
+                    Editar
+                  </button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

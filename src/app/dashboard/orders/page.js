@@ -19,7 +19,7 @@ export default function OrdersPage() {
 
   return (
     <>
-      <div className="stock-container p-6 bg-white shadow-lg rounded-md shadow-md">
+      <div className="">
         <button
           onClick={() => {
             setIsAddModalOpen(true);
@@ -39,26 +39,26 @@ export default function OrdersPage() {
           style={{ display: activeTab === "pendientes" ? "block" : "none" }}
         >
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-semibold text-gray-800">
+            <h1 className="text-3xl font-semibold text-white mb-6">
               Pedidos Pendientes
             </h1>
             <div className="tabs mb-6">
               <button
-                className={`px-4 py-2 font-semibold ${
+                className={`px-6 py-2 font-semibold rounded-full transition-all duration-300 ease-in-out ${
                   activeTab === "pendientes"
-                    ? "bg-[#05023c] text-white"
-                    : "bg-gray-200 text-gray-800"
-                } rounded-l-lg`}
+                    ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
+                    : "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 hover:from-gray-400 hover:to-gray-500"
+                } mr-2`}
                 onClick={() => setActiveTab("pendientes")}
               >
                 Pedidos Registrados
               </button>
               <button
-                className={`px-4 py-2 font-semibold ${
+                className={`px-6 py-2 font-semibold rounded-full transition-all duration-300 ease-in-out ${
                   activeTab === "entregados"
-                    ? "bg-[#05023c] text-white"
-                    : "bg-gray-200 text-gray-800"
-                } rounded-r-lg`}
+                    ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
+                    : "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 hover:from-gray-400 hover:to-gray-500"
+                }`}
                 onClick={() => setActiveTab("entregados")}
               >
                 Pedidos Entregados
@@ -82,27 +82,27 @@ export default function OrdersPage() {
           }`}
           style={{ display: activeTab === "entregados" ? "block" : "none" }}
         >
-          <div className="mb-6 flex justify-between">
-            <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+          <div className="mb-6 flex justify-between items-center">
+            <h1 className="text-3xl font-semibold text-white mb-6">
               Pedidos Entregados
             </h1>
             <div className="tabs mb-6">
               <button
-                className={`px-4 py-2 font-semibold ${
+                className={`px-6 py-2 font-semibold rounded-full transition-all duration-300 ease-in-out ${
                   activeTab === "pendientes"
-                    ? "bg-[#05023c] text-white"
-                    : "bg-gray-200 text-gray-800"
-                } rounded-l-lg`}
+                    ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
+                    : "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 hover:from-gray-400 hover:to-gray-500"
+                } mr-2`}
                 onClick={() => setActiveTab("pendientes")}
               >
                 Pedidos Registrados
               </button>
               <button
-                className={`px-4 py-2 font-semibold ${
+                className={`px-6 py-2 font-semibold rounded-full transition-all duration-300 ease-in-out ${
                   activeTab === "entregados"
-                    ? "bg-[#05023c] text-white"
-                    : "bg-gray-200 text-gray-800"
-                } rounded-r-lg`}
+                    ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md"
+                    : "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 hover:from-gray-400 hover:to-gray-500"
+                }`}
                 onClick={() => setActiveTab("entregados")}
               >
                 Pedidos Entregados

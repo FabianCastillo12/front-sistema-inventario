@@ -23,7 +23,7 @@ export default function ProductsPage() {
 
   return (
     <>
-      <div className="stock-container p-6 bg-white rounded-md shadow-md">
+      <div className="">
         <button
           onClick={() => {
             setEditingProduct(null);
@@ -33,7 +33,7 @@ export default function ProductsPage() {
         >
           <IoAdd size={40} color="white" />
         </button>
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6">Productos</h1>
+        <h1 className="text-3xl font-semibold text-white mb-6">Productos</h1>
         <ProductTable
           products={productPage}
           onEditProduct={(product) => {

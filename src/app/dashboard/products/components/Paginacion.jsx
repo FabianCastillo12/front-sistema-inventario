@@ -21,19 +21,15 @@ export default function Paginacion({ products }) {
         let startPage, endPage;
 
         if (totalPages <= 3) {
-            // Si hay 3 o menos páginas, mostrar todas
             startPage = 1;
             endPage = totalPages;
         } else if (currentPage === 1) {
-            // Si está en la primera página
             startPage = 1;
             endPage = 3;
         } else if (currentPage === totalPages) {
-            // Si está en la última página
             startPage = totalPages - 2;
             endPage = totalPages;
         } else {
-            // En otros casos, centrar la página actual
             startPage = currentPage - 1;
             endPage = currentPage + 1;
         }
@@ -50,43 +46,43 @@ export default function Paginacion({ products }) {
     };
 
     return (
-        <>
-            <nav className="w-full flex justify-center items-center m-4 ">
-                <ul className="flex">
-                    <li>
-                        <div
-                            className="cursor-pointer mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
-                            aria-label="Previous"
-                            onClick={() => paginate(currentPage - 1)}
+        <nav className="w-full flex justify-center items-center m-4">
+            <ul className="flex space-x-2">
+                <li>
+                    <button
+                        className="flex items-center justify-center w-10 h-10 rounded-full bg-[#2A2C39] text-gray-300 hover:bg-[#343747] transition-colors duration-150 ease-in-out"
+                        aria-label="Previous"
+                        onClick={() => paginate(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        <IoChevronBackSharp className="w-5 h-5" />
+                    </button>
+                </li>
+                {visiblePages.map((page) => (
+                    <li key={page}>
+                        <button
+                            className={`flex items-center justify-center w-10 h-10 rounded-full text-sm font-medium transition-colors duration-150 ease-in-out ${
+                                currentPage === page
+                                    ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-md'
+                                    : 'bg-[#2A2C39] text-gray-300 hover:bg-[#343747]'
+                            }`}
+                            onClick={() => paginate(page)}
                         >
-                            <span className="material-icons text-sm"><IoChevronBackSharp /></span>
-                        </div>
+                            {page}
+                        </button>
                     </li>
-                    {visiblePages.map((page) => (
-                        <li key={page}>
-                            <div
-                                className={`cursor-pointer mx-1 flex h-9 w-9 items-center justify-center rounded-full p-0 text-sm ${
-                                    currentPage === page
-                                        ? 'bg-gradient-to-tr from-green-600 to-green-400 text-white shadow-md shadow-green-500/20'
-                                        : 'border border-blue-gray-100 bg-transparent text-blue-gray-500 hover:bg-light-300'
-                                } transition duration-150 ease-in-out`}
-                                onClick={() => paginate(page)}
-                            >
-                                {page}
-                            </div>
-                        </li>
-                    ))}
-                    <li>
-                        <div
-                            className="mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-blue-gray-100 bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
-                            aria-label="Next"
-                            onClick={() => paginate(currentPage + 1)}
-                        >
-                            <span className="material-icons text-sm"><IoChevronForward /></span>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-        </>
+                ))}
+                <li>
+                    <button
+                        className="flex items-center justify-center w-10 h-10 rounded-full bg-[#2A2C39] text-gray-300 hover:bg-[#343747] transition-colors duration-150 ease-in-out"
+                        aria-label="Next"
+                        onClick={() => paginate(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        <IoChevronForward className="w-5 h-5" />
+                    </button>
+                </li>
+            </ul>
+        </nav>
     );
 }

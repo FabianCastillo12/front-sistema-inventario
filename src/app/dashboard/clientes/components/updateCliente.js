@@ -94,117 +94,99 @@ export default function UpdateClienteModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center text-black">
-      <div className="bg-white p-6 rounded shadow-lg w-80">
-        <h2 className="text-xl font-semibold mb-4">Editar Cliente</h2>
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-[#2A2C39] p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h2 className="text-2xl font-semibold mb-6 text-white">Editar Cliente</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Nombre</label>
+            <label htmlFor="nombre" className="block text-sm font-medium text-gray-300 mb-1">Nombre</label>
             <input
               type="text"
+              id="nombre"
               name="nombre"
               value={formData.nombre}
               onChange={handleChange}
-              className={`w-full border ${
-                errors.nombre ? "border-red-500" : "border-gray-300"
-              } rounded p-2`}
+              className={`w-full bg-[#171821] border ${errors.nombre ? 'border-red-500' : 'border-gray-600'} rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               required
             />
-            {errors.nombre && (
-              <p className="text-red-500 text-xs mt-1">{errors.nombre}</p>
-            )}
+            {errors.nombre && <p className="text-red-500 text-xs mt-1">{errors.nombre}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">Email</label>
             <input
               type="email"
+              id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } rounded p-2`}
+              className={`w-full bg-[#171821] border ${errors.email ? 'border-red-500' : 'border-gray-600'} rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               required
             />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Teléfono</label>
+            <label htmlFor="telefono" className="block text-sm font-medium text-gray-300 mb-1">Teléfono</label>
             <input
               type="text"
+              id="telefono"
               name="telefono"
               value={formData.telefono}
               onChange={handleChange}
-              className={`w-full border ${
-                errors.telefono ? "border-red-500" : "border-gray-300"
-              } rounded p-2`}
+              className={`w-full bg-[#171821] border ${errors.telefono ? 'border-red-500' : 'border-gray-600'} rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               required
             />
-            {errors.telefono && (
-              <p className="text-red-500 text-xs mt-1">{errors.telefono}</p>
-            )}
+            {errors.telefono && <p className="text-red-500 text-xs mt-1">{errors.telefono}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Dirección</label>
+            <label htmlFor="direccion" className="block text-sm font-medium text-gray-300 mb-1">Dirección</label>
             <input
               type="text"
+              id="direccion"
               name="direccion"
               value={formData.direccion}
               onChange={handleChange}
-              className={`w-full border ${
-                errors.direccion ? "border-red-500" : "border-gray-300"
-              } rounded p-2`}
+              className={`w-full bg-[#171821] border ${errors.direccion ? 'border-red-500' : 'border-gray-600'} rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               required
             />
-            {errors.direccion && (
-              <p className="text-red-500 text-xs mt-1">{errors.direccion}</p>
-            )}
+            {errors.direccion && <p className="text-red-500 text-xs mt-1">{errors.direccion}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">DNI</label>
+            <label htmlFor="dni" className="block text-sm font-medium text-gray-300 mb-1">DNI</label>
             <input
               type="text"
+              id="dni"
               name="dni"
               value={formData.dni}
               onChange={handleChange}
-              className={`w-full border ${
-                errors.dni ? "border-red-500" : "border-gray-300"
-              } rounded p-2`}
+              className={`w-full bg-[#171821] border ${errors.dni ? 'border-red-500' : 'border-gray-600'} rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               required
             />
-            {errors.dni && (
-              <p className="text-red-500 text-xs mt-1">{errors.dni}</p>
-            )}
+            {errors.dni && <p className="text-red-500 text-xs mt-1">{errors.dni}</p>}
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">RUC</label>
+          <div className="mb-6">
+            <label htmlFor="ruc" className="block text-sm font-medium text-gray-300 mb-1">RUC</label>
             <input
               type="text"
+              id="ruc"
               name="ruc"
               value={formData.ruc}
               onChange={handleChange}
-              className={`w-full border ${
-                errors.ruc ? "border-red-500" : "border-gray-300"
-              } rounded p-2`}
+              className={`w-full bg-[#171821] border ${errors.ruc ? 'border-red-500' : 'border-gray-600'} rounded-md p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               required
             />
-            {errors.ruc && (
-              <p className="text-red-500 text-xs mt-1">{errors.ruc}</p>
-            )}
+            {errors.ruc && <p className="text-red-500 text-xs mt-1">{errors.ruc}</p>}
           </div>
           <div className="flex justify-end space-x-4">
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-600 hover:to-gray-800 text-white px-4 py-2 rounded-full transition-colors duration-150 ease-in-out shadow-md"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-4 py-2 rounded-full transition-colors duration-150 ease-in-out shadow-md"
             >
               Guardar
             </button>

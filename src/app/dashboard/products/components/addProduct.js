@@ -15,7 +15,7 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
   const [categorias, setCategorias] = useState([]);
   const [errors, setErrors] = useState({});
   const user = useStore((state) => state.user);
-  // Fetch categories
+
   useEffect(() => {
     const traerCategorias = async () => {
       try {
@@ -34,7 +34,6 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
     traerCategorias();
   }, [user.token]);
 
-  // Populate form data when product is set
   useEffect(() => {
     if (product) {
       setFormData({
@@ -68,7 +67,6 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
       [name]: value,
     });
 
-    // Validate fields
     switch (name) {
       case "nombre":
         setErrors((prevErrors) => ({
@@ -108,7 +106,6 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all fields before submission
     const newErrors = {
       nombre: validateNombre(formData.nombre) ? "" : "El nombre solo puede contener letras y espacios.",
       precio: validatePrecio(formData.precio) ? "" : "El precio debe ser un número válido con hasta dos decimales.",
@@ -119,11 +116,9 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
 
     setErrors(newErrors);
 
-    // Check if there are any errors
     const hasErrors = Object.values(newErrors).some((error) => error);
     if (hasErrors) return;
 
-    // Check if product already exists
     const productExists = productos.some(p => p.nombre === formData.nombre);
     if (productExists) {
       setErrors(prevErrors => ({
@@ -158,94 +153,98 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
       unidad_medida: "",
       estado: "",
     });
-    setErrors({
-      nombre: "",
-      precio: "",
-      cantidadStock: "",
-      unidad_medida: "",
-      estado: "",
-    });
+    setErrors({});
     onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-        <h2 className="text-lg font-semibold mb-4">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-black z-50">
+      <div className="bg-[#2A2C39] p-6 rounded-lg shadow-lg max-w-sm w-full divide-y divide-[#3D4059]">
+        <h2 className="text-lg font-semibold text-white mb-4">
           {product ? "Modificar Producto" : "Agregar Producto"}
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="pt-4">
           <div className="mb-4">
-            <label className="block text-gray-700">Nombre</label>
+            <label htmlFor="nombre" className="block text-gray-300 text-sm font-medium mb-2">Nombre</label>
             <input
               type="text"
               name="nombre"
+              id="nombre"
               value={formData.nombre}
               onChange={handleChange}
-              className={`mt-1 block w-full border ${errors.nombre ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
             />
             {errors.nombre && <p className="text-red-500 text-sm">{errors.nombre}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Precio</label>
+            <label htmlFor="precio" className="block text-gray-300 text-sm font-medium mb-2">Precio</label>
             <input
               type="number"
               step="0.01"
               name="precio"
-              value={formData.precio || ""}
+              id="precio"
+              value={formData.precio}
               onChange={handleChange}
-              className={`mt-1 block w-full border ${errors.precio ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
             />
             {errors.precio && <p className="text-red-500 text-sm">{errors.precio}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Cantidad en Stock</label>
+            <label htmlFor="cantidadStock" className="block text-gray-300 text-sm font-medium mb-2">Cantidad en Stock</label>
             <input
               type="number"
               name="cantidadStock"
-              value={formData.cantidadStock || ""}
+              id="cantidadStock"
+              value={formData.cantidadStock}
               onChange={handleChange}
-              className={`mt-1 block w-full border ${errors.cantidadStock ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
             />
             {errors.cantidadStock && <p className="text-red-500 text-sm">{errors.cantidadStock}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Unidad de Medida</label>
+            <label htmlFor="unidad_medida" className="block text-gray-300 text-sm font-medium mb-2">Unidad de Medida</label>
             <input
               type="text"
               name="unidad_medida"
+              id="unidad_medida"
               value={formData.unidad_medida}
               onChange={handleChange}
-              className={`mt-1 block w-full border ${errors.unidad_medida ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
             />
             {errors.unidad_medida && <p className="text-red-500 text-sm">{errors.unidad_medida}</p>}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Estado</label>
+            <label htmlFor="estado" className="block text-gray-300 text-sm font-medium mb-2">Estado</label>
             <input
               type="text"
               name="estado"
+              id="estado"
               value={formData.estado}
               onChange={handleChange}
-              className={`mt-1 block w-full border ${errors.estado ? "border-red-500" : "border-gray-300"} rounded-md p-2`}
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
             />
             {errors.estado && <p className="text-red-500 text-sm">{errors.estado}</p>}
           </div>
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end mt-4">
             <button
               type="button"
               onClick={handleClose}
-              className="bg-gray-500 text-white py-1 px-3 rounded mr-2 hover:bg-gray-600"
+              className="bg-gradient-to-r from-gray-600 to-gray-800 text-white py-2 px-6 rounded-full shadow-md hover:from-gray-700 hover:to-gray-900 mr-4"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600"
+              className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-6 rounded-full shadow-md hover:from-blue-600 hover:to-blue-800"
             >
-              Agregar Producto
+              {product ? "Modificar" : "Agregar"}
             </button>
           </div>
         </form>

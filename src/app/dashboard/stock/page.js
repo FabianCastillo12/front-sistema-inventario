@@ -18,8 +18,8 @@ export default function StockPage() {
   const {productPage}=productStores()
 
   return (
-    <div className="stock-container p-6 bg-white rounded-md shadow-md">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Stock</h1>
+    <div className="">
+      <h1 className="text-3xl font-semibold text-white mb-6">Stock</h1>
       <StockList stock={productPage} onEdit={openUpdateModal} />
       {isUpdateModalOpen && currentProduct && (
         <UpdateStockModal

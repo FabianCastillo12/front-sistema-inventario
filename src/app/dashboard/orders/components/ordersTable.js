@@ -32,86 +32,86 @@ const OrdersTable = ({
   };
 
   if (!Array.isArray(orders)) {
-    return <div>No hay pedidos disponibles</div>;
+    return <div className="text-white">No hay pedidos disponibles</div>;
   }
 
   return (
-    <div>
-      <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-        <thead className="bg-[#05023c]">
+    <div className="bg-[#2A2C39] rounded-lg shadow-md overflow-hidden">
+      <table className="min-w-full divide-y divide-[#3D4059]">
+        <thead className="bg-[#3D4059]">
           <tr>
-            <th className="py-2 px-4 border-b text-white w-1/12">ID</th>
-            <th className="py-2 px-4 border-b text-white w-2/12">Fecha</th>
-            <th className="py-2 px-4 border-b text-white w-2/12">Cliente</th>
-            <th className="py-2 px-4 border-b text-white w-1/12">Total</th>
-            <th className="py-2 px-4 border-b text-white w-1/12">Estado</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">ID</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-2/12">Fecha</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-2/12">Cliente</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">Total</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">Estado</th>
             {isRegistrados && (
               <>
-                <th className="py-2 px-4 border-b text-white w-1/12">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">
                   Confirmar Entrega
                 </th>
-                <th className="py-2 px-4 border-b text-white w-1/12">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider w-1/12">
                   Cancelar Pedido
                 </th>
               </>
             )}
           </tr>
         </thead>
-        <tbody className="text-black text-center">
+        <tbody className="divide-y divide-[#3D4059]">
           {orderList.map((order) => (
             <tr
               key={order.id}
               onClick={() => viewOrder(true, order)}
-              className="cursor-pointer hover:bg-gray-100"
+              className="cursor-pointer hover:bg-[#343747] transition-colors duration-150 ease-in-out"
             >
-              <td className="py-2 px-4 border-b">{order.id}</td>
-              <td className="py-2 px-4 border-b">
-                {formatearFechaISO(order.fecha_pedido)}
+              <td className="px-6 py-2 whitespace-nowrap">
+                <div className="text-sm font-medium text-white">{order.id}</div>
               </td>
-              <td className="py-2 px-4 border-b">{order.cliente.nombre}</td>
-              <td className="py-2 px-4 border-b">
-                {currencyFormatter.format(order.total)}
+              <td className="px-6 py-2 whitespace-nowrap">
+                <div className="text-sm text-gray-300">{formatearFechaISO(order.fecha_pedido)}</div>
               </td>
-              <td className="py-2 px-4 border-b">{order.estado}</td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                <div className="text-sm text-gray-300">{order.cliente.nombre}</div>
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                <div className="text-sm text-gray-300">{currencyFormatter.format(order.total)}</div>
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  {order.estado}
+                </span>
+              </td>
               {isRegistrados && (
                 <>
-                  <td className="py-2 px-4 border-b">
+                  <td className="px-6 py-2 whitespace-nowrap">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onConfirmOrder(order.id);
                       }}
-                      className="bg-green-600 ml-1 text-white py-1 px-3 rounded hover:bg-green-700"
+                      className="text-green-400 hover:text-green-500 bg-[#2A2C39] hover:bg-[#343747] px-2 py-1 rounded-md transition-colors duration-150 ease-in-out text-sm"
                       onMouseEnter={(e) =>
-                        e.currentTarget.parentElement.parentElement.classList.remove(
-                          "hover:bg-gray-100"
-                        )
+                        e.currentTarget.closest('tr').classList.remove("hover:bg-[#343747]")
                       }
                       onMouseLeave={(e) =>
-                        e.currentTarget.parentElement.parentElement.classList.add(
-                          "hover:bg-gray-100"
-                        )
+                        e.currentTarget.closest('tr').classList.add("hover:bg-[#343747]")
                       }
                     >
                       Confirmar
                     </button>
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="px-6 py-2 whitespace-nowrap">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onDeleteOrder(order.id);
                       }}
-                      className="bg-red-600 ml-1 text-white py-1 px-3 rounded hover:bg-red-700"
+                      className="text-red-400 hover:text-red-500 bg-[#2A2C39] hover:bg-[#343747] px-2 py-1 rounded-md transition-colors duration-150 ease-in-out text-sm"
                       onMouseEnter={(e) =>
-                        e.currentTarget.parentElement.parentElement.classList.remove(
-                          "hover:bg-gray-100"
-                        )
+                        e.currentTarget.closest('tr').classList.remove("hover:bg-[#343747]")
                       }
                       onMouseLeave={(e) =>
-                        e.currentTarget.parentElement.parentElement.classList.add(
-                          "hover:bg-gray-100"
-                        )
+                        e.currentTarget.closest('tr').classList.add("hover:bg-[#343747]")
                       }
                     >
                       Eliminar

@@ -26,14 +26,14 @@ export default function UserPage() {
 
   return (
     <>
-      <div className="user-container">
+      <div className="">
         <button
           onClick={() => setIsAddModalOpen(true)}
           className="fixed bottom-10 right-10 bg-black shadow-lg rounded-full w-16 h-16 flex justify-center items-center"
         >
           <IoPersonAddOutline size={30} color="white" />
         </button>
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6">Usuarios</h1>
+        <h1 className="text-3xl font-semibold text-white mb-6">Usuarios</h1>
         {users.length > 0 && (
           <UserComponent
             users={users}

@@ -68,11 +68,7 @@ const Navbar = ({ setAbrirNavbar, abrirNavbar }) => {
             <span>Pedidos</span>
           </Link>
         </li>
-        <li className="pt-20">
-          <Link href="/" onClick={() => signOut()}>
-            {isClient && <IoLogIn size={25} />} <span>Cerrar Sesion</span>
-          </Link>
-        </li>
+        
         
       </ul>
       {abrirNavbar && (

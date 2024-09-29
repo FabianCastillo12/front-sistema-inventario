@@ -42,13 +42,15 @@ const UpdateStockModal = ({ isOpen, onClose, product, onUpdateStock }) => {
     }
   };
 
+  if (!isOpen) return null;
+
   return (
-    isOpen && (
-      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded-md shadow-md max-w-md w-full">
-          <h2 className="text-xl font-semibold mb-4">Actualizar Stock</h2>
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+      <div className="bg-[#2A2C39] p-6 rounded-lg shadow-lg max-w-sm w-full divide-y divide-[#3D4059]">
+        <h2 className="text-xl font-semibold mb-4 text-white">Actualizar Stock</h2>
+        <div className="pt-4">
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="stock">
+            <label htmlFor="stock" className="block text-gray-300 text-sm font-medium mb-2">
               Cantidad de Stock
             </label>
             <input
@@ -56,27 +58,27 @@ const UpdateStockModal = ({ isOpen, onClose, product, onUpdateStock }) => {
               type="number"
               value={stock}
               onChange={(e) => setStock(e.target.value)}
-              className="border border-gray-300 p-2 w-full rounded-md"
+              className="mt-1 block w-full border border-gray-400 rounded-md p-2 bg-[#171821] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end mt-4 space-x-4">
             <button
               onClick={onClose}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-4 rounded"
+              className="bg-gradient-to-r from-gray-600 to-gray-800 text-white py-2 px-6 rounded-full shadow-md hover:from-gray-700 hover:to-gray-900"
             >
               Cancelar
             </button>
             <button
               onClick={handleUpdate}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
+              className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-6 rounded-full shadow-md hover:from-blue-600 hover:to-blue-800"
             >
               Actualizar
             </button>
           </div>
         </div>
       </div>
-    )
+    </div>
   );
 };
 
