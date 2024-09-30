@@ -103,10 +103,116 @@ export function useReports() {
       console.error("Error fetching pedidos de 30 días:", error);
     }
   };
+
+  const generarExcelStock = async () => {
+    try {
+      const res = await fetch("http://localhost:3010/reportes-doc/inventario", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.user.token}`,
+          "Content-Type":
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = (today.getMonth() + 1).toString().padStart(2, "0");
+      const day = today.getDate().toString().padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+
+      const blob = await res.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Inventario ${formattedDate}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error fetching the inventory report:", error);
+    }
+  };
+
+  const generarExcelClientes = async () => {
+    try {
+      const res = await fetch("http://localhost:3010/reportes-doc/clientes", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.user.token}`,
+          "Content-Type":
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = (today.getMonth() + 1).toString().padStart(2, "0");
+      const day = today.getDate().toString().padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+
+      const blob = await res.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Clientes ${formattedDate}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error fetching the clients report:", error);
+    }
+  };
+
+  const generarExcelPedidos = async () => {
+    try {
+      const res = await fetch("http://localhost:3010/reportes-doc/pedidos", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.user.token}`,
+          "Content-Type":
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = (today.getMonth() + 1).toString().padStart(2, "0");
+      const day = today.getDate().toString().padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+
+      const blob = await res.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Pedidos ${formattedDate}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error fetching the orders report:", error);
+    }
+  };
+
   return {
     ventasHoy,
     ventas2años,
     cantidadPorTipoProductoSemanal,
     pedidos30Dias,
+    generarExcelStock,
+    generarExcelClientes,
+    generarExcelPedidos,
   };
 }

@@ -4,6 +4,7 @@ import OrdersTable from "@/app/dashboard/orders/components/ordersTable";
 import { IoAdd } from "react-icons/io5";
 import OrderAddModal from "@/app/dashboard/orders/components/addOrder";
 import { usePedidos } from "@/hooks/usePedidos";
+import { useReports } from "@/hooks/useReports";
 
 export default function OrdersPage() {
   const { pedidos, handleAddOrder, handleDeleteOrder, handleConfirmOrder } =
@@ -16,7 +17,7 @@ export default function OrdersPage() {
   const pedidosEntregados = pedidos.filter(
     (pedido) => pedido.estado === "Entregado"
   );
-
+  const { generarExcelPedidos } = useReports();
   return (
     <>
       <div className="">
@@ -24,12 +25,11 @@ export default function OrdersPage() {
           onClick={() => {
             setIsAddModalOpen(true);
           }}
-          className="fixed bottom-10 right-10 bg-black rounded-full w-12 h-12 flex justify-center items-center"
+          className="fixed bottom-10 right-10 bg-black rounded-full w-12 h-12 flex justify-center items-center z-50 shadow-lg"
         >
           <IoAdd size={40} color="white" />
         </button>
 
-        {/* Content based on active tab */}
         <div
           className={`transition-opacity duration-500 ease-in-out transform ${
             activeTab === "pendientes"
@@ -42,6 +42,7 @@ export default function OrdersPage() {
             <h1 className="text-3xl font-semibold text-white mb-6">
               Pedidos Pendientes
             </h1>
+
             <div className="tabs mb-6">
               <button
                 className={`px-6 py-2 font-semibold rounded-full transition-all duration-300 ease-in-out ${
@@ -65,7 +66,12 @@ export default function OrdersPage() {
               </button>
             </div>
           </div>
-
+          <button
+            onClick={generarExcelPedidos}
+            className="bg-[#006400] text-white text-xs px-2 py-2 rounded-md whitespace-nowrap mt-0 mb-6"
+          >
+            Exportar en Excel
+          </button>
           <OrdersTable
             orders={pedidosRegistrados}
             onConfirmOrder={handleConfirmOrder}
@@ -109,6 +115,12 @@ export default function OrdersPage() {
               </button>
             </div>
           </div>
+          <button
+            onClick={generarExcelPedidos}
+            className="bg-[#006400] text-white text-xs px-2 py-2 rounded-md whitespace-nowrap mt-0 mb-6"
+          >
+            Exportar en Excel
+          </button>
           <OrdersTable
             orders={pedidosEntregados}
             onConfirmOrder={handleConfirmOrder}

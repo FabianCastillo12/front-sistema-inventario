@@ -1,7 +1,6 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
-import { IoMenu, IoNotifications, IoPerson, IoLogIn, IoSettings } from "react-icons/io5"; // Importar IoSettings
+import { IoMenu, IoNotifications, IoPerson, IoLogIn } from "react-icons/io5"; // IoSettings no se utiliza
 import Navbar from "./navbar";
 import { useSession, signOut } from "next-auth/react"; // Importar NextAuth
 
@@ -12,18 +11,9 @@ export default function NavbarTop() {
 
   const { data: session, status } = useSession(); // Obtener la sesión actual
 
-  // Verificación del estado de carga de la sesión
-  if (status === "loading") {
-    return <p>Cargando...</p>; // Mostrar un mensaje de carga mientras se verifica la sesión
-  }
-
-  const navbarStyle = {
-    transform: abrirNavbar ? "translateX(0)" : "translateX(-100%)",
-    transition: "transform 0.3s ease-in-out",
-  };
-
-  // Cerrar el menú si se hace clic fuera del menú
+  // Asegúrate de que los hooks no cambien de render a render
   useEffect(() => {
+    // Manejar clics fuera del menú
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMostrarMenu(false);
@@ -33,7 +23,17 @@ export default function NavbarTop() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [menuRef]);
+  }, []);
+
+  // Evita que el componente retorne condicionalmente diferente cantidad de hooks
+  if (status === "loading") {
+    return <p>Cargando...</p>;
+  }
+
+  const navbarStyle = {
+    transform: abrirNavbar ? "translateX(0)" : "translateX(-100%)",
+    transition: "transform 0.3s ease-in-out",
+  };
 
   return (
     <>
@@ -45,16 +45,7 @@ export default function NavbarTop() {
           <IoMenu color="white" size={25} />
         </div>
 
-        <div className="p-2 bg-[#171821] col-span-7 rounded-lg md:rounded-md m-1 flex md:col-span-6 lg:col-span-8 gap-1 items-center">
-          {/* 
-          <IoSearch size={18} color="white" />
-          <input
-            type="search"
-            className="border-none bg-transparent text-white placeholder:text-white outline-none focus:outline-none focus:ring-0 focus:border-none w-full"
-            placeholder="Search here..."
-          />
-          */}
-        </div>
+        <div className="p-2 bg-[#171821] col-span-7 rounded-lg md:rounded-md m-1 flex md:col-span-6 lg:col-span-8 gap-1 items-center"></div>
 
         <div className="p-2 rounded-md m-1 col-span-3 flex gap-6 items-center justify-end lg:col-span-4 pr-8 relative">
           <IoNotifications size={25} color="white" />
@@ -74,16 +65,9 @@ export default function NavbarTop() {
                 <a
                   href="#"
                   className="flex items-center px-4 py-2 text-gray-200 hover:bg-gray-700"
+                  onClick={() => signOut()}
                 >
-                  <IoSettings size={20} className="mr-2" /> {/* Icono de configuración */}
-                  Configuración
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center px-4 py-2 text-gray-200 hover:bg-gray-700"
-                  onClick={() => signOut()} // Función de cerrar sesión
-                >
-                  <IoLogIn size={20} className="mr-2" /> {/* Icono de cerrar sesión */}
+                  <IoLogIn size={20} className="mr-2" />
                   Cerrar sesión
                 </a>
               </div>

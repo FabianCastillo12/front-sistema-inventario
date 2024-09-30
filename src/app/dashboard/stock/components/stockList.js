@@ -28,7 +28,10 @@ const StockList = ({ stock, onEdit }) => {
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap">
                   <div className="text-sm text-gray-300">
-                    {item.precio ? parseFloat(item.precio).toFixed(2) : "N/A"}
+                    {new Intl.NumberFormat("es-PE", {
+                    style: "currency",
+                    currency: "PEN",
+                  }).format(item.precio)}
                   </div>
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap">

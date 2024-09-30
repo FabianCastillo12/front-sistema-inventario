@@ -6,6 +6,7 @@ import ProductAddModal from "@/app/dashboard/products/components/addProduct";
 import { useProducts } from "@/hooks/useProducts";
 import Paginacion from "./components/Paginacion";
 import { productStores } from "@/stores/productoStores";
+import { useReports } from "@/hooks/useReports";
 
 export default function ProductsPage() {
   const {
@@ -19,7 +20,8 @@ export default function ProductsPage() {
     handleDeleteProduct,
     categoria,
   } = useProducts();
- const {productPage}=productStores()
+  const { productPage } = productStores();
+  const { generarExcelStock } = useReports();
 
   return (
     <>
@@ -52,7 +54,15 @@ export default function ProductsPage() {
           onDeleteProduct={handleDeleteProduct}
           product={editingProduct}
         />
-        <Paginacion  products={products}/>
+        <div className="flex justify-center items-center">
+          <button
+            onClick={generarExcelStock}
+            className="bg-[#006400] text-white text-xs px-2 py-2 rounded-md whitespace-nowrap mt-2" 
+          >
+            Exportar en Excel
+          </button>
+          <Paginacion products={products} />
+        </div>
       </div>
     </>
   );
