@@ -22,7 +22,7 @@ const handler = NextAuth({
           }
         );
         const user = await res.json();
-        console.log(user)
+        
         if (user.error) throw user;
 
         return user;
@@ -30,8 +30,8 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user,rol }) {
-      return { ...token, ...user,...rol };
+    async jwt({ token, user,rol,nombre }) {
+      return { ...token, ...user,...rol,...nombre };
     },
     async session({ session, token }) {
       session.user = token;
@@ -39,8 +39,12 @@ const handler = NextAuth({
     },
 },
 pages:{
-    signIn:"/"
-}
+    signIn:"/",
+    
+},
+session:{
+  maxAge:60*60*24 //hacer la prueba que se va a login cuando  pierde la session despues de un minuto
+},
 
 
 });

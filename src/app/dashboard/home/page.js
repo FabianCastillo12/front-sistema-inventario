@@ -5,9 +5,12 @@ import { LineChartHero } from "@/app/dashboard/home/components/linea";
 import { BarChartExampleWithGroups } from "@/app/dashboard/home/components/barras";
 import { ProgressCircleUsageExample } from "./components/progreso";
 import { useReports } from "@/hooks/useReports";
+import { useSession } from "next-auth/react";
 
 export default function DashboardPage() {
   const { ventasHoy, cantidadPorTipoProductoSemanal } = useReports();
+  const { data: session } = useSession();
+  
   const user = useStore((state) => state.user);
   const ultimasVentas = ventasHoy
     .sort((a, b) => new Date(b.fecha_pedido) - new Date(a.fecha_pedido))

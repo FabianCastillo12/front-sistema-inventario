@@ -10,7 +10,7 @@ export default function NavbarTop() {
   const menuRef = useRef(null);
 
   const { data: session, status } = useSession(); // Obtener la sesión actual
-
+ console.log(session)
   // Asegúrate de que los hooks no cambien de render a render
   useEffect(() => {
     // Manejar clics fuera del menú
@@ -29,7 +29,13 @@ export default function NavbarTop() {
   if (status === "loading") {
     return <p>Cargando...</p>;
   }
+ const nombre=(nombreCompleto)=>{
+  const partes = nombreCompleto.split(" ");
+    const nombre = partes[0].charAt(0).toUpperCase() + partes[0].slice(1); // Capitaliza el nombre
+    const inicialApellido = partes[1].charAt(0).toUpperCase(); // Inicial de "tokio"
 
+    return `${nombre} ${inicialApellido}`; // Combina el nombre y la inicial
+ }
   const navbarStyle = {
     transform: abrirNavbar ? "translateX(0)" : "translateX(-100%)",
     transition: "transform 0.3s ease-in-out",
@@ -49,18 +55,21 @@ export default function NavbarTop() {
 
         <div className="p-2 rounded-md m-1 col-span-3 flex gap-6 items-center justify-end lg:col-span-4 pr-8 relative">
           <IoNotifications size={25} color="white" />
-          <div className="relative">
+         
+          <div className="relative flex items-center gap-3">
+          <p className="text-white font-bold text-lg">{nombre(session?.user?.user) }.</p>
             <IoPerson
               size={25}
               color="white"
               className="cursor-pointer"
               onClick={() => setMostrarMenu(!mostrarMenu)}
             />
+              
 
             {mostrarMenu && (
               <div
                 ref={menuRef}
-                className="absolute right-0 mt-2 w-48 bg-[#21222D] rounded-md shadow-lg py-2 z-10 animate-slide-down"
+                className="absolute top-7 right-0 mt-2 w-48 bg-[#21222D] rounded-md shadow-lg py-2 z-10 animate-slide-down"
               >
                 <a
                   href="#"
@@ -91,7 +100,7 @@ export default function NavbarTop() {
           }
           to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0px);
           }
         }
 
