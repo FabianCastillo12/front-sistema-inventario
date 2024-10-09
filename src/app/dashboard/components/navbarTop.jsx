@@ -54,7 +54,7 @@ export default function NavbarTop() {
         <div className="p-2 bg-[#171821] col-span-7 rounded-lg md:rounded-md m-1 flex md:col-span-6 lg:col-span-8 gap-1 items-center"></div>
 
         <div className="p-2 rounded-md m-1 col-span-3 flex gap-6 items-center justify-end lg:col-span-4 pr-8 relative">
-          <IoNotifications size={25} color="white" />
+          
          
           <div className="relative flex items-center gap-3">
           <p className="text-white font-bold text-lg">{nombre(session?.user?.user) }.</p>

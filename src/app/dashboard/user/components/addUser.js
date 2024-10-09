@@ -4,7 +4,7 @@ import React, { useState } from "react";
 // Validaciones con regex
 const validateNombre = (nombre) => /^[a-zA-Z0-9\s]{1,50}$/.test(nombre);
 const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-const validatePassword = (password) => /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(password);
+const validatePassword = (password) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,100}$/.test(password);
 
 const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +18,11 @@ const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
   const [errors, setErrors] = useState({
     nombre: "",
     email: "",
+    password: "",
+    confir_password: "",
+  });
+
+  const [successMessages, setSuccessMessages] = useState({
     password: "",
     confir_password: "",
   });
@@ -43,18 +48,35 @@ const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
         }));
         break;
       case "password":
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          password: validatePassword(value)
-            ? ""
-            : "La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un número.",
-        }));
+        if (validatePassword(value)) {
+          setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
+          setSuccessMessages((prevMessages) => ({ ...prevMessages, password: "Contraseña segura" }));
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y al menos un carácter especial.",
+          }));
+          setSuccessMessages((prevMessages) => ({ ...prevMessages, password: "" }));
+        }
+        // Validar confirmación de contraseña
+        if (formData.confir_password) {
+          if (value === formData.confir_password) {
+            setErrors((prevErrors) => ({ ...prevErrors, confir_password: "" }));
+            setSuccessMessages((prevMessages) => ({ ...prevMessages, confir_password: "Las contraseñas coinciden" }));
+          } else {
+            setErrors((prevErrors) => ({ ...prevErrors, confir_password: "Las contraseñas no coinciden" }));
+            setSuccessMessages((prevMessages) => ({ ...prevMessages, confir_password: "" }));
+          }
+        }
         break;
       case "confir_password":
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          confir_password: value === formData.password ? "" : "La contraseña y la confirmación de contraseña deben coincidir.",
-        }));
+        if (value === formData.password) {
+          setErrors((prevErrors) => ({ ...prevErrors, confir_password: "" }));
+          setSuccessMessages((prevMessages) => ({ ...prevMessages, confir_password: "Las contraseñas coinciden" }));
+        } else {
+          setErrors((prevErrors) => ({ ...prevErrors, confir_password: "Las contraseñas no coinciden" }));
+          setSuccessMessages((prevMessages) => ({ ...prevMessages, confir_password: "" }));
+        }
         break;
       default:
         break;
@@ -98,7 +120,6 @@ const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
       setErrors(newErrors);
     }
   };
-
 
   if (!isOpen) return null;
 
@@ -150,6 +171,7 @@ const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
               required
             />
             {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+            {successMessages.password && <p className="text-green-500 text-sm">{successMessages.password}</p>}
           </div>
 
           {/* Confirmar Contraseña */}
@@ -165,6 +187,7 @@ const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
               required
             />
             {errors.confir_password && <p className="text-red-500 text-sm">{errors.confir_password}</p>}
+            {successMessages.confir_password && <p className="text-green-500 text-sm">{successMessages.confir_password}</p>}
           </div>
 
           {/* Rol */}

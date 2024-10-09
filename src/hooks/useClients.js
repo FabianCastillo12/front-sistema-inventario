@@ -118,7 +118,7 @@ export function useClientes() {
             position: "center",
             icon: "error",
             title: "Error al eliminar el cliente",
-            text: errorData.message,
+            text: "El cliente no pudo ser eliminado, tiene un pedido asociado.",
           });
         }
       } catch (error) {

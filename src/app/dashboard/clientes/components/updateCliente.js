@@ -18,7 +18,7 @@ export default function UpdateClienteModal({
   // Validaciones
   const validateDNI = (dni) => /^\d{8}$/.test(dni);
   const validateRUC = (ruc) => /^(10|20)\d{9}$/.test(ruc);
-  const validateNombre = (nombre) => /^[a-zA-Z\s]{1,50}$/.test(nombre);
+  const validateNombre = (nombre) => /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]{1,50}$/.test(nombre);
   const validateEmail = (email) => 
     /^[a-zA-Z0-9._-]{1,50}@[a-zA-Z0-9.-]{1,50}\.[a-zA-Z]{2,}$/.test(email);
   const validateTelefono = (telefono) => /^\d{9,15}$/.test(telefono);
