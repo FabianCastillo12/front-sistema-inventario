@@ -23,7 +23,7 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
   useEffect(() => {
     const traerCategorias = async () => {
       try {
-        const res = await fetch("http://localhost:3010/categoria", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/categoria`, {
           headers: {
             Authorization: `Bearer ${session.user.token}`,
           },

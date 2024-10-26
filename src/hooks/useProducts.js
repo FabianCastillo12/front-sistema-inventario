@@ -18,7 +18,7 @@ export function useProducts() {
 
   const fetchCategoria = async () => {
     try {
-      const res = await fetch("http://localhost:3010/categoria", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/categoria`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -33,7 +33,7 @@ export function useProducts() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:3010/producto/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/producto/`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -47,7 +47,7 @@ export function useProducts() {
 
   const handleAddProduct = async (newProduct) => {
     try {
-      const res = await fetch("http://localhost:3010/producto/crear", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/producto/crear`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session.user.token}`,
@@ -93,7 +93,7 @@ export function useProducts() {
       if (result.isConfirmed) {
         try {
           const res = await fetch(
-            `http://localhost:3010/producto/${formData.id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/producto/${formData.id}`,
             {
               method: "PATCH",
               headers: {
@@ -139,7 +139,7 @@ export function useProducts() {
     });
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3010/producto/${productId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/producto/${productId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${session.user.token}`,

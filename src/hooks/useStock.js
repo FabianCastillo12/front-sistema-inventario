@@ -16,7 +16,7 @@ export function useStock() {
 
   const fetchStock = async () => {
     try {
-      const res = await fetch("http://localhost:3010/producto/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/producto/`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -36,7 +36,7 @@ export function useStock() {
 
   const handleUpdateStock = async (productId, newStock) => {
     try {
-      const res = await fetch(`http://localhost:3010/producto/${productId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/producto/${productId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

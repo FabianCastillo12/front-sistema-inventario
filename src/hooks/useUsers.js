@@ -19,7 +19,7 @@ export function useUsers() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:3010/auth/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -46,7 +46,7 @@ export function useUsers() {
     if (result.isConfirmed) {
       try {
         const { id, ...userData } = updatedUser;
-        const res = await fetch(`http://localhost:3010/auth/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${id}`, {
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${session.user.token}`,
@@ -100,7 +100,7 @@ export function useUsers() {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3010/auth/${userId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${userId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${session.user.token}`,
@@ -134,7 +134,7 @@ export function useUsers() {
 
   const handleAddUser = async (newUser) => {
     try {
-      const res = await fetch("http://localhost:3010/auth/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session.user.token}`,

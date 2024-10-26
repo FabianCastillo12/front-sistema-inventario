@@ -20,7 +20,7 @@ export function useReports() {
 
   const fetchVentasHoy = async () => {
     try {
-      const res = await fetch("http://localhost:3010/reportes/ventas-hoy", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reportes/ventas-hoy`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -40,7 +40,7 @@ export function useReports() {
 
   const fetchVentas2años = async () => {
     try {
-      const res = await fetch("http://localhost:3010/reportes/ventas-2-years", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reportes/ventas-2-years`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -61,7 +61,7 @@ export function useReports() {
   const fetchCantidadPorTipoProductoSemanal = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3010/reportes/ventas-categoria-semanal",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reportes/ventas-categoria-semanal`,
         {
           headers: {
             Authorization: `Bearer ${session.user.token}`,
@@ -86,7 +86,7 @@ export function useReports() {
 
   const fetchPedido30Dias = async () => {
     try {
-      const res = await fetch("http://localhost:3010/reportes/ventas-30-dias", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reportes/ventas-30-dias`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -106,7 +106,7 @@ export function useReports() {
 
   const generarExcelStock = async () => {
     try {
-      const res = await fetch("http://localhost:3010/reportes-doc/inventario", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reportes-doc/inventario`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${session.user.token}`,
@@ -140,7 +140,7 @@ export function useReports() {
 
   const generarExcelClientes = async () => {
     try {
-      const res = await fetch("http://localhost:3010/reportes-doc/clientes", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reportes-doc/clientes`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${session.user.token}`,
@@ -174,7 +174,7 @@ export function useReports() {
 
   const generarExcelPedidos = async () => {
     try {
-      const res = await fetch("http://localhost:3010/reportes-doc/pedidos", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reportes-doc/pedidos`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${session.user.token}`,

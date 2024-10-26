@@ -64,7 +64,7 @@ const OrderAddModal = ({ isOpen, onClose, onAddOrder }) => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:3010/producto/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/producto/`, { 
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },

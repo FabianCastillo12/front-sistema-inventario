@@ -18,7 +18,7 @@ export function usePedidos() {
 
   const fetchPedidos = async () => {
     try {
-      const res = await fetch("http://localhost:3010/pedidos/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pedidos/`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -38,7 +38,7 @@ export function usePedidos() {
 
   const handleAddOrder = async (newOrder) => {
     try {
-      const res = await fetch("http://localhost:3010/pedidos/crear", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pedidos/crear`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session.user.token}`,
@@ -99,7 +99,7 @@ export function usePedidos() {
     });
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3010/pedidos/${orderId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pedidos/${orderId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${session.user.token}`,
@@ -141,7 +141,7 @@ export function usePedidos() {
     });
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3010/pedidos/${idOrder}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pedidos/${idOrder}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

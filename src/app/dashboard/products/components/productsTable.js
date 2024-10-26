@@ -25,13 +25,13 @@ const ProductTable = ({
 
   const getCategoryColor = (categoryName) => {
     const categoryColors = {
-      "Soda Limon": "bg-green-200 text-green-900", 
+      "Soda Limón": "bg-green-200 text-green-900", 
       "Kola T. oro": "bg-yellow-200 text-yellow-900", 
-      "Kola T. piña": "bg-orange-100 text-orange-800",
+      "Kola Tigrina": "bg-orange-100 text-orange-800",
       "Kola T. naranja": "bg-orange-300 text-orange-900",
       "Kola T. guarana": "bg-red-200 text-red-900",
       "Kola T. roja": "bg-rose-200 text-rose-900",
-      "Agua Mineral": "bg-blue-200 text-blue-900",
+      "Agua Vip": "bg-blue-200 text-blue-900",
       "Bebida Alcoholica": "bg-purple-200 text-purple-900",
       "Kola T. negra": "bg-gray-200 text-gray-900",
     };

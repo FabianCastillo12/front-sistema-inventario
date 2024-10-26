@@ -17,7 +17,7 @@ export function useClientes() {
 
   const fetchClientes = async () => {
     try {
-      const res = await fetch("http://localhost:3010/clientes/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/clientes/`, {
         headers: {
           Authorization: `Bearer ${session.user.token}`,
         },
@@ -38,7 +38,7 @@ export function useClientes() {
   const handleUpdateCliente = async (updatedCliente) => {
     const { id, ...clienteData } = updatedCliente;
     try {
-      const res = await fetch(`http://localhost:3010/clientes/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/clientes/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export function useClientes() {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://localhost:3010/clientes/${clienteId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/clientes/${clienteId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${session.user.token}`,
@@ -135,7 +135,7 @@ export function useClientes() {
 
   const handleAddCliente = async (newCliente) => {
     try {
-      const res = await fetch("http://localhost:3010/clientes/", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/clientes/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
