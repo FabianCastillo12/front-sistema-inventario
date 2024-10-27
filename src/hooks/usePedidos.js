@@ -10,11 +10,6 @@ export function usePedidos() {
   const { stock, handleUpdateStock } = useStock();
   const { fetchProducts } = useProducts();
 
-  useEffect(() => {
-    if (session?.user?.token) {
-      fetchPedidos();
-    }
-  }, [session]);
 
   const fetchPedidos = async () => {
     try {
@@ -36,6 +31,11 @@ export function usePedidos() {
     }
   };
 
+  useEffect(() => {
+    if (session?.user?.token) {
+      fetchPedidos();
+    }
+  }, [session]);
   const handleAddOrder = async (newOrder) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pedidos/crear`, {

@@ -23,7 +23,7 @@ const ViewOrderPdf = ({ formData }) => {
         {/* Encabezado */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image style={styles.logo} src="/api/placeholder/150/50" />
+            <Image alt="no sabo" style={styles.logo} src="/api/placeholder/150/50" />
           </View>
           <View style={styles.headerInfo}>
             <Text style={styles.companyName}>LA FABRICA S.A.C.</Text>

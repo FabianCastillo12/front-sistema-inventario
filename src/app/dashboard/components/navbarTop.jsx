@@ -30,8 +30,8 @@ export default function NavbarTop() {
     return <p>Cargando...</p>;
   }
  const nombre=(nombreCompleto)=>{
-  const partes = nombreCompleto.split(" ");
-    const nombre = partes[0].charAt(0).toUpperCase() + partes[0].slice(1); // Capitaliza el nombre
+  const partes = nombreCompleto&& nombreCompleto?.split(" ");
+    const nombre = partes[0]?.charAt(0).toUpperCase() + partes[0].slice(1); // Capitaliza el nombre
     const inicialApellido = partes[1].charAt(0).toUpperCase(); // Inicial de "tokio"
 
     return `${nombre} ${inicialApellido}`; // Combina el nombre y la inicial

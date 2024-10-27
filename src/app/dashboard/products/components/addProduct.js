@@ -36,7 +36,7 @@ const ProductAddModal = ({ productos, isOpen, onClose, onAddProduct, product }) 
     };
 
     traerCategorias();
-  }, [user.token]);
+  }, [user]);
 
   useEffect(() => {
     if (product) {
